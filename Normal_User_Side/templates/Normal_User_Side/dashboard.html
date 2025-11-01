@@ -1,0 +1,230 @@
+{% extends 'Normal_User_Side/base_dashboard.html' %}
+
+{% block title %}Land Appraisal System - Dashboard{% endblock %}
+
+{% block content %}
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-foreground mb-2">Welcome back!</h1>
+        <p class="text-muted-foreground">Manage your land appraisal projects and start new estimations.</p>
+    </div>
+
+    <!-- Primary Action Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- New Project Card -->
+        <a href="{% url 'new-project' %}">
+            <div class="border border-primary/20 hover:border-primary/40 rounded-lg bg-card hover:shadow-lg transition-shadow cursor-pointer">
+                <div class="p-6 pb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-3 bg-primary/10 rounded-lg">
+                            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-foreground">New Project</h3>
+                            <p class="text-sm text-muted-foreground">Start a new land price estimation</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 pb-6">
+                    <button class="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-2 rounded-lg font-medium transition">
+                        Create New Appraisal
+                    </button>
+                </div>
+            </div>
+        </a>
+
+        <!-- My Projects Card -->
+        <a href="{% url 'projects' %}">
+            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+                <div class="p-6 pb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-3 bg-accent/10 rounded-lg">
+                            <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-foreground">My Projects</h3>
+                            <p class="text-sm text-muted-foreground">View and manage your projects</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 pb-6">
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-primary">3</span>
+                        <button class="border border-input bg-background hover:bg-muted px-4 py-2 rounded-lg transition">View All</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Recent Projects Section -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-foreground">Recent Projects</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Project Card 1 -->
+            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
+                <div class="p-6 pb-3">
+                    <div class="flex items-start justify-between mb-2">
+                        <h3 class="text-lg font-bold text-foreground line-clamp-1">Downtown Commercial Plot</h3>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">In Progress</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        </svg>
+                        123 Main St, Downtown
+                    </p>
+                </div>
+                <div class="px-6 pb-6 space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground">Estimated Value</span>
+                        <span class="font-semibold text-primary">$2,450,000</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            2 days ago
+                        </span>
+                        <a href="{% url 'projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Card 2 -->
+            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
+                <div class="p-6 pb-3">
+                    <div class="flex items-start justify-between mb-2">
+                        <h3 class="text-lg font-bold text-foreground line-clamp-1">Residential Development Site</h3>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary text-primary-foreground">Completed</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        </svg>
+                        456 Oak Ave, Suburbs
+                    </p>
+                </div>
+                <div class="px-6 pb-6 space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground">Estimated Value</span>
+                        <span class="font-semibold text-primary">$1,850,000</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            1 week ago
+                        </span>
+                        <a href="{% url 'projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Card 3 -->
+            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
+                <div class="p-6 pb-3">
+                    <div class="flex items-start justify-between mb-2">
+                        <h3 class="text-lg font-bold text-foreground line-clamp-1">Industrial Warehouse Property</h3>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary text-primary-foreground">Completed</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        </svg>
+                        789 Industrial Blvd
+                    </p>
+                </div>
+                <div class="px-6 pb-6 space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground">Estimated Value</span>
+                        <span class="font-semibold text-primary">$3,200,000</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            3 days ago
+                        </span>
+                        <a href="{% url 'projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Action Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- User Profile Card -->
+        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+            <div class="p-6 pb-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <h3 class="text-base font-bold text-foreground">User Profile</h3>
+                </div>
+            </div>
+            <div class="px-6 pb-6">
+                <p class="text-sm text-muted-foreground">View and update personal info</p>
+            </div>
+        </div>
+
+        <!-- Reports Card -->
+        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+            <div class="p-6 pb-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="text-base font-bold text-foreground">Reports</h3>
+                </div>
+            </div>
+            <div class="px-6 pb-6">
+                <p class="text-sm text-muted-foreground">Generate and view reports</p>
+            </div>
+        </div>
+
+        <!-- Notifications Card -->
+        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+            <div class="p-6 pb-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <h3 class="text-base font-bold text-foreground">Notifications</h3>
+                </div>
+            </div>
+            <div class="px-6 pb-6">
+                <p class="text-sm text-muted-foreground">Manage your notifications</p>
+            </div>
+        </div>
+
+        <!-- Help & Support Card -->
+        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+            <div class="p-6 pb-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 class="text-base font-bold text-foreground">Help & Support</h3>
+                </div>
+            </div>
+            <div class="px-6 pb-6">
+                <p class="text-sm text-muted-foreground">Get help and support</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
