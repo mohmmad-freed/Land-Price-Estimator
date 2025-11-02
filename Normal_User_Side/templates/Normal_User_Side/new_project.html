@@ -1,0 +1,753 @@
+{% extends 'Normal_User_Side/base_dashboard.html' %}
+
+{% block title %}Create New Land Appraisal - Land Appraisal System{% endblock %}
+
+{% block content %}
+    <div class="space-y-6 max-w-7xl">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-foreground mb-2">Create New Land Appraisal</h1>
+            <p class="text-muted-foreground">Enter land details to estimate its price</p>
+        </div>
+
+        <!-- Main Grid: Form and Estimation Results -->
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Left Column: Form Section -->
+            <div class="space-y-6">
+                <!-- Back Link -->
+                <div class="flex items-center gap-2 mb-6">
+                    <a href="{% url 'dashboard' %}" class="text-muted-foreground hover:text-foreground">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                    <span class="text-sm text-muted-foreground">Back to Dashboard</span>
+                </div>
+
+                <!-- Form Card -->
+                <div class="border border-border rounded-lg bg-card">
+                    <!-- Card Header -->
+                    <div class="p-6 pb-4 border-b border-border">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <h2 class="text-xl font-bold text-foreground">Project Details</h2>
+                        </div>
+                        <p class="text-muted-foreground text-sm">Fill in the land information to create your appraisal project</p>
+                    </div>
+
+                    <!-- Card Content -->
+                    <div class="p-6 space-y-4">
+                        <form id="appraisalForm">
+                            <!-- Project Name -->
+                            <div class="space-y-2 mb-4">
+                                <label for="projectName" class="block text-sm font-medium text-foreground">Project Name *</label>
+                                <input 
+                                    type="text" 
+                                    id="projectName" 
+                                    placeholder="Enter project name"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all"
+                                >
+                                <p class="error-message hidden text-sm text-red-500" id="error-projectName"></p>
+                            </div>
+
+                            <!-- Governorate -->
+                            <div class="space-y-2 mb-4">
+                                <label for="governorate" class="block text-sm font-medium text-foreground">Governorate *</label>
+                                <select 
+                                    id="governorate"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all"
+                                >
+                                    <option value="">Select governorate</option>
+                                    <option value="Beirut">Beirut</option>
+                                    <option value="Mount Lebanon">Mount Lebanon</option>
+                                    <option value="North Lebanon">North Lebanon</option>
+                                    <option value="South Lebanon">South Lebanon</option>
+                                    <option value="Bekaa">Bekaa</option>
+                                </select>
+                                <p class="error-message hidden text-sm text-red-500" id="error-governorate"></p>
+                            </div>
+
+                            <!-- City -->
+                            <div class="space-y-2 mb-4">
+                                <label for="city" class="block text-sm font-medium text-foreground">City/Town *</label>
+                                <select 
+                                    id="city"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled
+                                >
+                                    <option value="">Select city/town</option>
+                                </select>
+                                <p class="error-message hidden text-sm text-red-500" id="error-city"></p>
+                            </div>
+
+                            <!-- Neighborhood -->
+                            <div class="space-y-2 mb-4">
+                                <label for="neighborhood" class="block text-sm font-medium text-foreground">Neighborhood *</label>
+                                <select 
+                                    id="neighborhood"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled
+                                >
+                                    <option value="">Select neighborhood</option>
+                                </select>
+                                <p class="error-message hidden text-sm text-red-500" id="error-neighborhood"></p>
+                            </div>
+
+                            <!-- Land Size -->
+                            <div class="space-y-2 mb-4">
+                                <label for="landSize" class="block text-sm font-medium text-foreground">Land Size (sq. meters) *</label>
+                                <input 
+                                    type="number" 
+                                    id="landSize" 
+                                    placeholder="Enter land size"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all"
+                                >
+                                <p class="error-message hidden text-sm text-red-500" id="error-landSize"></p>
+                            </div>
+
+                            <!-- Land Type -->
+                            <div class="space-y-2 mb-4">
+                                <label for="landType" class="block text-sm font-medium text-foreground">Land Type *</label>
+                                <select 
+                                    id="landType"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all"
+                                >
+                                    <option value="">Select land type</option>
+                                    <option value="Residential">Residential</option>
+                                    <option value="Commercial">Commercial</option>
+                                    <option value="Agricultural">Agricultural</option>
+                                    <option value="Industrial">Industrial</option>
+                                </select>
+                                <p class="error-message hidden text-sm text-red-500" id="error-landType"></p>
+                            </div>
+
+                            <!-- Political Classification -->
+                            <div class="space-y-2 mb-4">
+                                <label for="politicalClassification" class="block text-sm font-medium text-foreground">Political Classification *</label>
+                                <select 
+                                    id="politicalClassification"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all"
+                                >
+                                    <option value="">Select classification</option>
+                                    <option value="A">Class A</option>
+                                    <option value="B">Class B</option>
+                                    <option value="C">Class C</option>
+                                </select>
+                                <p class="error-message hidden text-sm text-red-500" id="error-politicalClassification"></p>
+                            </div>
+
+                            <!-- Infrastructure Checkboxes -->
+                            <div class="space-y-2 mb-4">
+                                <label class="block text-sm font-medium text-foreground">Infrastructure</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    {% for infra in "Water|Electricity|Internet|Road Access" | split:"|" %}
+                                        <div class="flex items-center">
+                                            <input 
+                                                type="checkbox" 
+                                                id="infra-{{ infra | slugify }}" 
+                                                value="{{ infra }}"
+                                                class="infrastructure-checkbox w-4 h-4"
+                                            >
+                                            <label for="infra-{{ infra | slugify }}" class="ml-2 text-sm font-normal text-foreground">
+                                                {{ infra }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Zoning Restrictions Multi-Select -->
+                            <div class="space-y-2 mb-4">
+                                <label class="block text-sm font-medium text-foreground">Zoning / Usage Restrictions</label>
+                                <button 
+                                    type="button"
+                                    id="zoningBtn" 
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all text-left flex justify-between items-center"
+                                >
+                                    <span id="zoningLabel">Select zoning restrictions...</span>
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                                    </svg>
+                                </button>
+
+                                <!-- Zoning Dropdown (Hidden by default) -->
+                                <div id="zoningDropdown" class="hidden absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-w-sm">
+                                    <div class="p-2">
+                                        <input 
+                                            type="text" 
+                                            id="zoningSearch" 
+                                            placeholder="Search restrictions..." 
+                                            class="w-full px-3 py-2 border border-gray-200 rounded text-sm mb-2"
+                                        >
+                                        <div id="zoningOptions" class="space-y-1 max-h-48 overflow-y-auto">
+                                            <!-- Options populated by JS -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Selected Restrictions Display -->
+                                <div id="selectedRestrictions" class="flex flex-wrap gap-2 mt-2">
+                                    <!-- Tags populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="space-y-2 mb-4">
+                                <label for="description" class="block text-sm font-medium text-foreground">Description</label>
+                                <textarea 
+                                    id="description" 
+                                    placeholder="Additional notes about the land"
+                                    rows="3"
+                                    class="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none shadow-sm transition-all resize-none"
+                                ></textarea>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-3 pt-4">
+                                <button 
+                                    type="button"
+                                    id="saveBtn"
+                                    class="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Save Project
+                                </button>
+
+                                <button 
+                                    type="button"
+                                    id="estimateBtn"
+                                    class="flex-1 bg-emerald-600 text-white hover:bg-emerald-700 px-4 py-2 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed hidden"
+                                >
+                                    <svg class="inline h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Estimate Price
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Estimation Results -->
+            <div class="space-y-6">
+                <!-- Estimation Card -->
+                <div id="estimationCard" class="border border-dashed border-border rounded-lg bg-card hidden">
+                    <div class="p-6 pb-4 border-b border-border">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <h2 class="text-xl font-bold text-foreground">Price Estimation</h2>
+                        </div>
+                        <p class="text-muted-foreground text-sm">AI-powered land price prediction based on your inputs</p>
+                    </div>
+
+                    <div class="p-6 space-y-4">
+                        <!-- Loading State -->
+                        <div id="estimationLoading" class="hidden text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                            <p class="text-muted-foreground">Running prediction model...</p>
+                        </div>
+
+                        <!-- Completed State -->
+                        <div id="estimationResult" class="hidden">
+                            <div class="text-center py-6 border-b border-border">
+                                <div id="estimatedPrice" class="text-3xl font-bold text-emerald-600 mb-2">$0</div>
+                                <span class="inline-block bg-emerald-100 text-emerald-800 px-3 py-1 rounded text-sm font-medium">
+                                    <svg class="inline h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Completed
+                                </span>
+                            </div>
+
+                            <div class="space-y-3 mt-4">
+                                <h4 class="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Key Factors</h4>
+                                <div class="grid grid-cols-2 gap-3 text-sm">
+                                    <div>
+                                        <span class="text-muted-foreground">Size:</span>
+                                        <div class="font-medium" id="factor-size">-</div>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted-foreground">Type:</span>
+                                        <div class="font-medium" id="factor-type">-</div>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted-foreground">Location:</span>
+                                        <div class="font-medium" id="factor-location">-</div>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted-foreground">Classification:</span>
+                                        <div class="font-medium" id="factor-classification">-</div>
+                                    </div>
+                                </div>
+
+                                <!-- Infrastructure Tags -->
+                                <div id="infrastructureTags" class="hidden pt-2">
+                                    <span class="text-muted-foreground text-sm">Infrastructure:</span>
+                                    <div id="infrastructureDisplay" class="flex flex-wrap gap-1 mt-1">
+                                        <!-- Tags populated by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Zoning Restrictions Tags -->
+                                <div id="zoningTags" class="hidden pt-2">
+                                    <span class="text-muted-foreground text-sm">Zoning Restrictions:</span>
+                                    <div id="zoningDisplay" class="flex flex-wrap gap-1 mt-1">
+                                        <!-- Tags populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error State -->
+                        <div id="estimationError" class="hidden text-center py-6">
+                            <svg class="h-8 w-8 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-red-600 font-medium">Estimation Failed</p>
+                            <p class="text-sm text-muted-foreground mt-1">Please try again or contact support</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State (shown when no estimation) -->
+                <div id="emptyState" class="border border-dashed border-border rounded-lg bg-card">
+                    <div class="flex flex-col items-center justify-center py-12 text-center p-6">
+                        <svg class="h-12 w-12 text-muted-foreground mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <h3 class="font-semibold mb-2 text-foreground">Price Estimation</h3>
+                        <p class="text-sm text-muted-foreground">
+                            Save your project first, then click "Estimate Price" to get an AI-powered land valuation
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Data (as JSON for JS) -->
+    <script>
+        const locationData = {
+            "Beirut": {
+                cities: ["Beirut City"],
+                neighborhoods: {
+                    "Beirut City": ["Hamra", "Achrafieh", "Verdun", "Ras Beirut", "Downtown"]
+                }
+            },
+            "Mount Lebanon": {
+                cities: ["Baabda", "Aley", "Chouf", "Keserwan", "Metn", "Jbeil"],
+                neighborhoods: {
+                    "Baabda": ["Baabda Center", "Hazmieh", "Sin el Fil", "Chiyah"],
+                    "Aley": ["Aley Center", "Bhamdoun", "Souk el Gharb", "Aramoun"],
+                    "Chouf": ["Beiteddine", "Deir el Qamar", "Mukhtara", "Baakline"],
+                    "Keserwan": ["Jounieh", "Harissa", "Kaslik", "Ghazir"],
+                    "Metn": ["Antelias", "Dbayeh", "Mansourieh", "Broummana"],
+                    "Jbeil": ["Byblos", "Amchit", "Batroun", "Enfeh"]
+                }
+            },
+            "North Lebanon": {
+                cities: ["Tripoli", "Zgharta", "Koura", "Bcharre", "Batroun", "Miniyeh-Danniyeh"],
+                neighborhoods: {
+                    "Tripoli": ["Mina", "Abu Samra", "Bab al-Tabbaneh", "Jabal Mohsen"],
+                    "Zgharta": ["Zgharta Center", "Ehden", "Miziara"],
+                    "Koura": ["Amioun", "Kousba", "Deddeh"],
+                    "Bcharre": ["Bcharre Center", "Hasroun", "Dimane"],
+                    "Batroun": ["Batroun Center", "Tannourine", "Douma"],
+                    "Miniyeh-Danniyeh": ["Miniyeh", "Sir ed-Danniyeh", "Bakhoun"]
+                }
+            },
+            "South Lebanon": {
+                cities: ["Sidon", "Tyre", "Jezzine", "Nabatieh"],
+                neighborhoods: {
+                    "Sidon": ["Sidon Center", "Ain el-Hilweh", "Miyeh w Miyeh"],
+                    "Tyre": ["Tyre Center", "Qana", "Bint Jbeil"],
+                    "Jezzine": ["Jezzine Center", "Kfarhim", "Louaizeh"],
+                    "Nabatieh": ["Nabatieh Center", "Hasbaya", "Marjayoun"]
+                }
+            },
+            "Bekaa": {
+                cities: ["Zahle", "Baalbek", "West Bekaa", "Rashaya"],
+                neighborhoods: {
+                    "Zahle": ["Zahle Center", "Karak", "Taalbaya"],
+                    "Baalbek": ["Baalbek Center", "Hermel", "Arsal"],
+                    "West Bekaa": ["Joub Jannine", "Saghbine", "Kamed el Loz"],
+                    "Rashaya": ["Rashaya Center", "Kfar Mishki", "Aita el Foukhar"]
+                }
+            }
+        };
+
+        const zoningOptions = [
+            "Residential Only",
+            "Commercial Allowed",
+            "Mixed Use",
+            "Industrial Restricted",
+            "Height Limitations",
+            "Setback Requirements",
+            "Parking Requirements",
+            "Environmental Restrictions"
+        ];
+
+        // Form state
+        let formState = {
+            projectName: "",
+            governorate: "",
+            city: "",
+            neighborhood: "",
+            landSize: "",
+            landType: "",
+            politicalClassification: "",
+            infrastructure: [],
+            zoningRestrictions: [],
+            description: ""
+        };
+
+        let isSaved = false;
+        let estimation = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            populateZoningOptions();
+        });
+
+        function setupEventListeners() {
+            // Governorate change
+            document.getElementById('governorate').addEventListener('change', function(e) {
+                formState.governorate = e.target.value;
+                updateCities();
+                formState.city = "";
+                formState.neighborhood = "";
+                clearErrors(['city', 'neighborhood']);
+            });
+
+            // City change
+            document.getElementById('city').addEventListener('change', function(e) {
+                formState.city = e.target.value;
+                updateNeighborhoods();
+                formState.neighborhood = "";
+                clearErrors(['neighborhood']);
+            });
+
+            // Neighborhood change
+            document.getElementById('neighborhood').addEventListener('change', function(e) {
+                formState.neighborhood = e.target.value;
+                clearErrors(['neighborhood']);
+            });
+
+            // Other inputs
+            document.getElementById('projectName').addEventListener('input', function(e) {
+                formState.projectName = e.target.value;
+                clearErrors(['projectName']);
+            });
+
+            document.getElementById('landSize').addEventListener('input', function(e) {
+                formState.landSize = e.target.value;
+                clearErrors(['landSize']);
+            });
+
+            document.getElementById('landType').addEventListener('change', function(e) {
+                formState.landType = e.target.value;
+                clearErrors(['landType']);
+            });
+
+            document.getElementById('politicalClassification').addEventListener('change', function(e) {
+                formState.politicalClassification = e.target.value;
+                clearErrors(['politicalClassification']);
+            });
+
+            document.getElementById('description').addEventListener('input', function(e) {
+                formState.description = e.target.value;
+            });
+
+            // Infrastructure checkboxes
+            document.querySelectorAll('.infrastructure-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        formState.infrastructure.push(this.value);
+                    } else {
+                        formState.infrastructure = formState.infrastructure.filter(item => item !== this.value);
+                    }
+                });
+            });
+
+            // Zoning button
+            document.getElementById('zoningBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const dropdown = document.getElementById('zoningDropdown');
+                dropdown.classList.toggle('hidden');
+            });
+
+            // Close zoning dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                const zoningBtn = document.getElementById('zoningBtn');
+                const zoningDropdown = document.getElementById('zoningDropdown');
+                if (!zoningBtn.contains(e.target) && !zoningDropdown.contains(e.target)) {
+                    zoningDropdown.classList.add('hidden');
+                }
+            });
+
+            // Save button
+            document.getElementById('saveBtn').addEventListener('click', handleSaveProject);
+
+            // Estimate button
+            document.getElementById('estimateBtn').addEventListener('click', handleEstimatePrice);
+        }
+
+        function populateZoningOptions() {
+            const optionsContainer = document.getElementById('zoningOptions');
+            optionsContainer.innerHTML = zoningOptions.map(option => `
+                <label class="flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded">
+                    <input 
+                        type="checkbox" 
+                        value="${option}" 
+                        class="zoning-option w-4 h-4"
+                    >
+                    <span class="ml-2 text-sm">${option}</span>
+                </label>
+            `).join('');
+
+            document.querySelectorAll('.zoning-option').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        formState.zoningRestrictions.push(this.value);
+                    } else {
+                        formState.zoningRestrictions = formState.zoningRestrictions.filter(item => item !== this.value);
+                    }
+                    updateSelectedRestrictions();
+                });
+            });
+        }
+
+        function updateSelectedRestrictions() {
+            const container = document.getElementById('selectedRestrictions');
+            const label = document.getElementById('zoningLabel');
+
+            if (formState.zoningRestrictions.length === 0) {
+                label.textContent = 'Select zoning restrictions...';
+                container.innerHTML = '';
+            } else {
+                label.textContent = `${formState.zoningRestrictions.length} restriction${formState.zoningRestrictions.length > 1 ? 's' : ''} selected`;
+                container.innerHTML = formState.zoningRestrictions.map(restriction => `
+                    <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded text-sm">
+                        ${restriction}
+                        <button type="button" onclick="removeZoningRestriction('${restriction}')" class="hover:text-emerald-600">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </span>
+                `).join('');
+            }
+        }
+
+        function removeZoningRestriction(restriction) {
+            formState.zoningRestrictions = formState.zoningRestrictions.filter(item => item !== restriction);
+            document.querySelectorAll('.zoning-option').forEach(checkbox => {
+                if (checkbox.value === restriction) {
+                    checkbox.checked = false;
+                }
+            });
+            updateSelectedRestrictions();
+        }
+
+        function updateCities() {
+            const citySelect = document.getElementById('city');
+            const governorate = formState.governorate;
+
+            citySelect.innerHTML = '<option value="">Select city/town</option>';
+
+            if (governorate && locationData[governorate]) {
+                const cities = locationData[governorate].cities;
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+                citySelect.disabled = false;
+            } else {
+                citySelect.disabled = true;
+            }
+        }
+
+        function updateNeighborhoods() {
+            const neighborhoodSelect = document.getElementById('neighborhood');
+            const governorate = formState.governorate;
+            const city = formState.city;
+
+            neighborhoodSelect.innerHTML = '<option value="">Select neighborhood</option>';
+
+            if (governorate && city && locationData[governorate]?.neighborhoods[city]) {
+                const neighborhoods = locationData[governorate].neighborhoods[city];
+                neighborhoods.forEach(neighborhood => {
+                    const option = document.createElement('option');
+                    option.value = neighborhood;
+                    option.textContent = neighborhood;
+                    neighborhoodSelect.appendChild(option);
+                });
+                neighborhoodSelect.disabled = false;
+            } else {
+                neighborhoodSelect.disabled = true;
+            }
+        }
+
+        function validateForm() {
+            const errors = {};
+
+            if (!formState.projectName.trim()) {
+                errors.projectName = "Project name is required";
+            }
+
+            if (!formState.governorate) {
+                errors.governorate = "Governorate is required";
+            }
+
+            if (!formState.city) {
+                errors.city = "City is required";
+            }
+
+            if (!formState.neighborhood) {
+                errors.neighborhood = "Neighborhood is required";
+            }
+
+            if (!formState.landSize.trim()) {
+                errors.landSize = "Land size is required";
+            } else if (isNaN(Number(formState.landSize)) || Number(formState.landSize) <= 0) {
+                errors.landSize = "Please enter a valid land size";
+            }
+
+            if (!formState.landType) {
+                errors.landType = "Land type is required";
+            }
+
+            if (!formState.politicalClassification) {
+                errors.politicalClassification = "Political classification is required";
+            }
+
+            // Display errors
+            Object.keys(errors).forEach(field => {
+                const errorEl = document.getElementById('error-' + field);
+                if (errorEl) {
+                    errorEl.textContent = errors[field];
+                    errorEl.classList.remove('hidden');
+                    document.getElementById(field).classList.add('border-red-500');
+                }
+            });
+
+            return Object.keys(errors).length === 0;
+        }
+
+        function clearErrors(fields) {
+            fields.forEach(field => {
+                const errorEl = document.getElementById('error-' + field);
+                if (errorEl) {
+                    errorEl.classList.add('hidden');
+                    document.getElementById(field).classList.remove('border-red-500');
+                }
+            });
+        }
+
+        async function handleSaveProject() {
+            if (!validateForm()) return;
+
+            const btn = document.getElementById('saveBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                isSaved = true;
+                btn.textContent = 'Project Saved';
+                document.getElementById('estimateBtn').classList.remove('hidden');
+            } catch (error) {
+                console.error('Failed to save project:', error);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function handleEstimatePrice() {
+            const btn = document.getElementById('estimateBtn');
+            btn.disabled = true;
+            btn.textContent = 'Estimating...';
+
+            // Show estimation card and loading state
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('estimationCard').classList.remove('hidden');
+            document.getElementById('estimationLoading').classList.remove('hidden');
+            document.getElementById('estimationResult').classList.add('hidden');
+            document.getElementById('estimationError').classList.add('hidden');
+
+            try {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                // Calculate estimated price
+                const basePrice = Number(formState.landSize) * 1000;
+                const typeMultiplier = {
+                    'Residential': 1.2,
+                    'Commercial': 2.5,
+                    'Agricultural': 0.8,
+                    'Industrial': 1.8
+                }[formState.landType] || 1;
+
+                const classMultiplier = {
+                    'A': 1.5,
+                    'B': 1.2,
+                    'C': 1.0
+                }[formState.politicalClassification] || 1;
+
+                const infrastructureBonus = 1 + formState.infrastructure.length * 0.05;
+                const zoningPenalty = 1 - formState.zoningRestrictions.length * 0.05;
+
+                const estimatedPrice = Math.round(
+                    basePrice * typeMultiplier * classMultiplier * infrastructureBonus * zoningPenalty
+                );
+
+                // Display results
+                document.getElementById('estimatedPrice').textContent = '$' + estimatedPrice.toLocaleString();
+                document.getElementById('factor-size').textContent = formState.landSize + ' sq. meters';
+                document.getElementById('factor-type').textContent = formState.landType;
+                document.getElementById('factor-location').textContent = `${formState.neighborhood}, ${formState.city}, ${formState.governorate}`;
+                document.getElementById('factor-classification').textContent = `Class ${formState.politicalClassification}`;
+
+                // Show infrastructure tags
+                if (formState.infrastructure.length > 0) {
+                    document.getElementById('infrastructureTags').classList.remove('hidden');
+                    document.getElementById('infrastructureDisplay').innerHTML = formState.infrastructure
+                        .map(item => `<span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">${item}</span>`)
+                        .join('');
+                } else {
+                    document.getElementById('infrastructureTags').classList.add('hidden');
+                }
+
+                // Show zoning tags
+                if (formState.zoningRestrictions.length > 0) {
+                    document.getElementById('zoningTags').classList.remove('hidden');
+                    document.getElementById('zoningDisplay').innerHTML = formState.zoningRestrictions
+                        .map(item => `<span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">${item}</span>`)
+                        .join('');
+                } else {
+                    document.getElementById('zoningTags').classList.add('hidden');
+                }
+
+                document.getElementById('estimationLoading').classList.add('hidden');
+                document.getElementById('estimationResult').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Estimation failed:', error);
+                document.getElementById('estimationLoading').classList.add('hidden');
+                document.getElementById('estimationError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Estimate Price';
+            }
+        }
+    </script>
+{% endblock %}
