@@ -1,26 +1,11 @@
-"""
-URL configuration for Land_Price_Estimator project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('normal/', include('Normal_User_Side.urls')),
-    path('scientist/', include('Data_Scientist_Side.urls')),
-    path('custom-admin/', include('Admin_Side.urls')),
+    path('normal/', include('Normal_User_Side.urls', namespace='normal_user')),
+    path('scientist/', include('Data_Scientist_Side.urls', namespace='data_scientist')),
+    path('admin/', include('Admin_Side.urls', namespace='admin_side')),
+    path('users/', include('Users_Handling_App.urls')),
 ]
