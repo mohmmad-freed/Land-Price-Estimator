@@ -11,7 +11,7 @@
     <!-- Primary Action Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <!-- New Project Card -->
-        <a href="{% url 'new-project' %}">
+        <a href="{% url 'normal_user:new-project' %}">
             <div class="border border-primary/20 hover:border-primary/40 rounded-lg bg-card hover:shadow-lg transition-shadow cursor-pointer">
                 <div class="p-6 pb-4">
                     <div class="flex items-center space-x-3">
@@ -35,7 +35,7 @@
         </a>
 
         <!-- My Projects Card -->
-        <a href="{% url 'projects' %}">
+        <a href="{% url 'normal_user:projects' %}">
             <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
                 <div class="p-6 pb-4">
                     <div class="flex items-center space-x-3">
@@ -90,7 +90,7 @@
                             </svg>
                             2 days ago
                         </span>
-                        <a href="{% url 'projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                        <a href="{% url 'normal_user:projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
                             View Details
                         </a>
                     </div>
@@ -123,7 +123,7 @@
                             </svg>
                             1 week ago
                         </span>
-                        <a href="{% url 'projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                        <a href="{% url 'normal_user:projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
                             View Details
                         </a>
                     </div>
@@ -156,7 +156,7 @@
                             </svg>
                             3 days ago
                         </span>
-                        <a href="{% url 'projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                        <a href="{% url 'normal_user:projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
                             View Details
                         </a>
                     </div>

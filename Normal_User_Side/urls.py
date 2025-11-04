@@ -9,4 +9,6 @@ urlpatterns = [
     path('profile/<int:pk>/', views.profile, name='profile'),
     path('new-project/', views.newProject, name='new-project'),
     path('projects/', views.viewProjects, name='projects'),
+    path('settings/', views.settings, name='settings'),
+   
 ]

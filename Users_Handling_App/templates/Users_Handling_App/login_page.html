@@ -37,7 +37,7 @@
                     <p class="text-muted-foreground text-center text-sm mt-2">Enter your credentials to access your account</p>
                 </div>
 
-                <form id="loginForm" method="POST" action="{% url 'login-api' %}" class="space-y-4">
+                <form id="loginForm" method="POST" action="{% url 'users:login' %}" class="space-y-4">
                     {% csrf_token %}
 
                     <!-- Email Field -->
@@ -112,7 +112,7 @@
                     <p class="text-muted-foreground text-center text-sm mt-2">Enter your registered email address, and we'll send you instructions to reset your password.</p>
                 </div>
 
-                <form id="forgotForm" method="POST" action="{% url 'forgot-password-api' %}" class="space-y-4">
+                <form id="forgotForm" method="POST" action="{% url 'users:logout' %}" class="space-y-4">  <!-- change this later -->
                     {% csrf_token %}
 
                     <!-- Email Field -->
@@ -186,7 +186,7 @@
                     <p class="text-muted-foreground text-center text-sm mt-2">Enter your new password below to reset your account access.</p>
                 </div>
 
-                <form id="resetForm" method="POST" action="{% url 'reset-password-api' %}" class="space-y-4">
+                <form id="resetForm" method="POST" action="{% url 'users:logout' %}" class="space-y-4"> <!-- change this later -->
                     {% csrf_token %}
                     <input type="hidden" name="token" id="resetToken">
 
@@ -353,7 +353,7 @@
 
             try {
                 const formData = new FormData(this);
-                const response = await fetch('{% url "login-api" %}', {
+                const response = await fetch('{% url "users:login" %}', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -362,7 +362,7 @@
                 });
 
                 if (response.ok) {
-                    window.location.href = '{% url "dashboard" %}';
+                    window.location.href = '{% url "normal_user:dashboard" %}';
                 } else {
                     const data = await response.json();
                     errorMsg.textContent = data.error || 'Login failed. Please try again.';
@@ -392,7 +392,7 @@
 
             try {
                 const formData = new FormData(this);
-                const response = await fetch('{% url "forgot-password-api" %}', {
+                const response = await fetch('{% url "users:login" %}', {   // change this later
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -447,7 +447,7 @@
 
             try {
                 const formData = new FormData(this);
-                const response = await fetch('{% url "reset-password-api" %}', {
+                const response = await fetch('{% url "users:login" %}', { // change this later
                     method: 'POST',
                     body: formData,
                     headers: {

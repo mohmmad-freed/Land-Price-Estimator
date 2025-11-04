@@ -49,3 +49,9 @@ def loginPage(request):
     return render(request, 'Users_Handling_App/login_page.html')
 
 
+
+def logoutUser(request):
+     logout(request)
+     return redirect('users:login')
+
+

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 # from .models import 
 
@@ -21,3 +21,9 @@ def newProject(request):
 
 def viewProjects(request):
      return render(request, 'Normal_User_Side/projects.html')
+
+
+def settings(request):
+     return render(request, 'Normal_User_Side/settings.html')
+
+
