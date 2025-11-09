@@ -1,0 +1,26 @@
+{% extends 'Normal_User_Side/base_dashboard.html' %}
+
+{% block title %}Register - Land Appraisal System{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="space-y-4">
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <label>Activation Code</label>
+        <input type="text" name="activation_code" required placeholder="Enter your activation code">
+
+        <button type="submit">Register</button>
+    </div>
+</form>
+<p>Already have an account?</p>
+ <a href="{% url 'users:login' %}">Login</a>
+
+
+{% endblock content %}

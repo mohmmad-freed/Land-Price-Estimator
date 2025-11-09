@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User, ActivationCode
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
@@ -21,3 +21,11 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
+
+
+
+@admin.register(ActivationCode)
+class ActivationCodeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'user_type', 'is_used', 'assigned_to', 'created_at')
+    list_filter = ('user_type', 'is_used')
+    search_fields = ('code',)

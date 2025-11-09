@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
+from .models import ActivationCode
 
 User = get_user_model()
 
@@ -55,3 +56,30 @@ def logoutUser(request):
      return redirect('users:login')
 
 
+
+
+
+def register(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        activation_code = request.POST.get('activation_code')
+
+        # Validate activation code
+        try:
+            code_obj = ActivationCode.objects.get(code=activation_code, is_used=False)
+        except ActivationCode.DoesNotExist:
+            messages.error(request, "Invalid or expired activation code.")
+            return redirect('users:register')
+
+        # Create the user and assign type from the code
+        user = User.objects.create_user(email=email, password=password, type=code_obj.user_type)
+        code_obj.is_used = True
+        code_obj.assigned_to = user
+        code_obj.save()
+
+        login(request, user)
+        messages.success(request, f"Account created successfully as {user.type}.")
+        return redirect('users:login')
+
+    return render(request, 'Users_Handling_App/register.html')

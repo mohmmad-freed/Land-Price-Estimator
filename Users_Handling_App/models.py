@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+import uuid
+from django.conf import settings
 
 
 
@@ -47,3 +49,27 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+
+class ActivationCode(models.Model):
+    USER_TYPES = [
+        ('normal', 'Normal User (Appraiser)'),
+        ('data_scientist', 'Data Scientist'),
+        ('admin', 'Administrator'),
+    ]
+
+    code = models.CharField(max_length=50, unique=True)
+    user_type = models.CharField(max_length=30, choices=USER_TYPES)
+    is_used = models.BooleanField(default=False)
+    assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+       return f"{self.code} ({self.get_user_type_display()})"
+
+    @classmethod
+    def generate_code(cls, user_type):
+        """Generate and save a unique activation code."""
+        code = uuid.uuid4().hex[:8].upper()
+        return cls.objects.create(code=code, user_type=user_type)
