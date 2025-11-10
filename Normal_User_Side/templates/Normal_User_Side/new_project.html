@@ -143,7 +143,7 @@
                             <div class="space-y-2 mb-4">
                                 <label class="block text-sm font-medium text-foreground">Infrastructure</label>
                                 <div class="grid grid-cols-2 gap-3">
-                                    {% for infra in "Water|Electricity|Internet|Road Access" | split:"|" %}
+                                    {% for infra in infrastructures %}
                                         <div class="flex items-center">
                                             <input 
                                                 type="checkbox" 

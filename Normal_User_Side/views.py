@@ -16,7 +16,9 @@ def profile(request,pk):
 
 
 def newProject(request):
-     return render(request, 'Normal_User_Side/new_project.html')
+     infrastructures = ["Water", "Electricity", "Internet", "Road Access"]
+     context = {'infrastructures': infrastructures}
+     return render(request, 'Normal_User_Side/new_project.html', context)
 
 
 def viewProjects(request):
