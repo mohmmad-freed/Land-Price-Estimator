@@ -29,3 +29,4 @@ class ActivationCodeAdmin(admin.ModelAdmin):
     list_display = ('code', 'user_type', 'is_used', 'assigned_to', 'created_at')
     list_filter = ('user_type', 'is_used')
     search_fields = ('code',)
+    readonly_fields = ('is_used',)
