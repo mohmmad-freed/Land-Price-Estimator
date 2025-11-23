@@ -19,8 +19,13 @@
         <button type="submit">Register</button>
     </div>
 </form>
-<p>Already have an account?</p>
- <a href="{% url 'users:login' %}">Login</a>
+<div class="flex items-center space-x-2">
+    <p class="text-sm">Already have an account?</p>
+    <a href="{% url 'users:login' %}" class="text-sm bg-primary text-primary-foreground px-3 py-1 rounded">
+        Login
+    </a>
+</div>
+
 
 
 {% endblock content %}
