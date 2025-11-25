@@ -63,6 +63,7 @@ def logoutUser(request):
 
 def register(request):
     if request.method == 'POST':
+        name = request.POST.get('name')
         email = request.POST.get('email')
         password = request.POST.get('password')
         activation_code = request.POST.get('activation_code')
@@ -75,7 +76,7 @@ def register(request):
             return redirect('users:register')
 
         # Create the user and assign type from the code
-        user = User.objects.create_user(email=email, password=password, type=code_obj.user_type)
+        user = User.objects.create_user(name=name, email=email, password=password, type=code_obj.user_type)
         code_obj.is_used = True
         code_obj.assigned_to = user
         code_obj.save()
