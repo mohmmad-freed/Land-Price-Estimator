@@ -17,7 +17,8 @@ def profile(request,pk):
 
 def newProject(request):
      infrastructures = ["Water", "Electricity", "Internet", "Road Access"]
-     context = {'infrastructures': infrastructures}
+     Restrictions = ["Residential Only", "Commercial Allowed", "Industrial Restricted"]
+     context = {'infrastructures': infrastructures, 'Restrictions': Restrictions}
      return render(request, 'Normal_User_Side/new_project.html', context)
 
 
