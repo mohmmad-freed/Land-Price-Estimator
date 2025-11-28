@@ -32,7 +32,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     USER_TYPES = [
-        ('normal', 'Normal User'),
+        ('normal', 'Land Appraiser'),
         ('scientist', 'Data Scientist'),
         ('admin', 'Admin'),
     ]
