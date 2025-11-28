@@ -36,11 +36,11 @@
 
         <!-- My Projects Card -->
         <a href="{% url 'normal_user:projects' %}">
-            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+            <div class="border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
                 <div class="p-6 pb-4">
                     <div class="flex items-center space-x-3">
-                        <div class="p-3 bg-accent/10 rounded-lg">
-                            <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-3 bg-secondary/10 rounded-lg">
+                            <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
                             </svg>
                         </div>
@@ -53,7 +53,7 @@
                 <div class="px-6 pb-6">
                     <div class="flex items-center justify-between">
                         <span class="text-2xl font-bold text-primary">3</span>
-                        <button class="border border-input bg-background hover:bg-muted px-4 py-2 rounded-lg transition">View All</button>
+                        <button class="border bg-background hover:bg-muted px-4 py-2 rounded-lg transition">View All</button>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
         <h2 class="text-2xl font-semibold mb-4 text-foreground">Recent Projects</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Project Card 1 -->
-            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
+            <div class="border rounded-lg bg-card hover:shadow-md transition-shadow">
                 <div class="p-6 pb-3">
                     <div class="flex items-start justify-between mb-2">
                         <h3 class="text-lg font-bold text-foreground line-clamp-1">Downtown Commercial Plot</h3>
@@ -90,7 +90,7 @@
                             </svg>
                             2 days ago
                         </span>
-                        <a href="{% url 'normal_user:projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                        <a href="{% url 'normal_user:projects' %}" class="px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
                             View Details
                         </a>
                     </div>
@@ -98,7 +98,7 @@
             </div>
 
             <!-- Project Card 2 -->
-            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
+            <div class="border rounded-lg bg-card hover:shadow-md transition-shadow">
                 <div class="p-6 pb-3">
                     <div class="flex items-start justify-between mb-2">
                         <h3 class="text-lg font-bold text-foreground line-clamp-1">Residential Development Site</h3>
@@ -123,7 +123,7 @@
                             </svg>
                             1 week ago
                         </span>
-                        <a href="{% url 'normal_user:projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                        <a href="{% url 'normal_user:projects' %}" class="px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
                             View Details
                         </a>
                     </div>
@@ -131,7 +131,7 @@
             </div>
 
             <!-- Project Card 3 -->
-            <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
+            <div class="border rounded-lg bg-card hover:shadow-md transition-shadow">
                 <div class="p-6 pb-3">
                     <div class="flex items-start justify-between mb-2">
                         <h3 class="text-lg font-bold text-foreground line-clamp-1">Industrial Warehouse Property</h3>
@@ -156,7 +156,7 @@
                             </svg>
                             3 days ago
                         </span>
-                        <a href="{% url 'normal_user:projects' %}" class="bg-none border-none px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
+                        <a href="{% url 'normal_user:projects' %}" class="px-3 py-1 text-primary hover:bg-muted rounded cursor-pointer text-sm font-medium transition">
                             View Details
                         </a>
                     </div>
@@ -168,7 +168,7 @@
     <!-- Secondary Action Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- User Profile Card -->
-        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+        <div class="border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
             <div class="p-6 pb-3">
                 <div class="flex items-center space-x-2 mb-2">
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -183,7 +183,7 @@
         </div>
 
         <!-- Reports Card -->
-        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+        <div class="border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
             <div class="p-6 pb-3">
                 <div class="flex items-center space-x-2 mb-2">
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,7 +198,7 @@
         </div>
 
         <!-- Notifications Card -->
-        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+        <div class="border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
             <div class="p-6 pb-3">
                 <div class="flex items-center space-x-2 mb-2">
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,7 +213,7 @@
         </div>
 
         <!-- Help & Support Card -->
-        <div class="border border-border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
+        <div class="border rounded-lg bg-card hover:shadow-md transition-shadow cursor-pointer">
             <div class="p-6 pb-3">
                 <div class="flex items-center space-x-2 mb-2">
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

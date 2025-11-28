@@ -14,6 +14,10 @@ def profile(request,pk):
     user = User.objects.get(id = pk)
     return render(request, 'Normal_User_Side/profile.html')
 
+def editProfile(request,pk):
+    user = User.objects.get(id = pk)
+    return render(request, 'Normal_User_Side/edit_profile.html')
+
 
 def newProject(request):
      infrastructures = ["Water", "Electricity", "Internet", "Road Access"]
