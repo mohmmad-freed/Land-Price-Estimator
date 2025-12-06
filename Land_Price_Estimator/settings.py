@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Data_Scientist_Side.apps.DataScientistSideConfig',
     'Admin_Side.apps.AdminSideConfig',
     'Users_Handling_App.apps.UsersHandlingAppConfig',
+    'django.contrib.humanize',
 ]
 
 AUTH_USER_MODEL = 'Users_Handling_App.User'

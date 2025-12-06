@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-# from .models import 
+from .models import Project
 
 
 User = get_user_model()
@@ -27,7 +27,14 @@ def newProject(request):
 
 
 def viewProjects(request):
-     return render(request, 'Normal_User_Side/projects.html')
+     projects = Project.objects.all().order_by('-date_created')
+     context = {
+        'projects': projects,
+        'land_types': [label for value, label in Project.LAND_TYPES],
+        'political_types': [label for value, label in Project.POLITICAL],
+        'statuses': [label for value, label in Project.STATUS_CHOICES],
+    }
+     return render(request, 'Normal_User_Side/projects.html',context)
 
 
 def settings(request):
