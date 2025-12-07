@@ -506,7 +506,10 @@ input[type="number"],
 select,
 textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding-top: 0.75rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 0.75rem;
   border: 2px solid var(--border);
   border-radius: 0.5rem;
   background-color: var(--input);
@@ -742,3 +745,35 @@ th {
 
 
 .relative { position: relative; }
+
+
+/* Positioning */
+.absolute {
+  position:absolute;
+}
+
+.left-3 {
+  left: 0.75rem;
+}
+
+.top-1\/2 {
+  top: 50%;
+}
+
+.-translate-y-1\/2 {
+  transform: translateY(-50%);
+}
+
+/* Padding utilities */
+.pl-10 {
+  padding-left: 2.5rem;
+}
+
+.pl-14 {
+  padding-left: 3.5rem !important;
+}
+
+.pl-16 {
+  padding-left: 4rem !important;
+}
+
