@@ -30,9 +30,9 @@ def viewProjects(request):
      projects = Project.objects.all().order_by('-date_created')
      context = {
         'projects': projects,
-        'land_types': [label for value, label in Project.LAND_TYPES],
-        'political_types': [label for value, label in Project.POLITICAL],
-        'statuses': [label for value, label in Project.STATUS_CHOICES],
+        'land_types': Project.LAND_TYPES,
+        'political_types': Project.POLITICAL,
+        'statuses': Project.STATUS_CHOICES,
     }
      return render(request, 'Normal_User_Side/projects.html',context)
 

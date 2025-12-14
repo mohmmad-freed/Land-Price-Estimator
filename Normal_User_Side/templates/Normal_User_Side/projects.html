@@ -4,97 +4,101 @@
 {% block title %}My Projects - Land Appraisal System{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-background">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between gap-4 mb-8">
+<div class="container px-4 py-8">
+    <div class="bg-card border rounded-xl shadow-soft p-6">
+        
         <a href="{% url 'normal_user:dashboard' %}" class="inline-flex items-center gap-2 text-primary hover:opacity-80 mb-4 transition">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                Back to Dashboard
-            </a>
-        <div>
-            <h1 class="text-3xl font-bold text-foreground">My Projects</h1>
-            <p class="text-muted-foreground mt-1">Manage and continue your land appraisal projects</p>
-        </div>
-
-        <a href="{% url 'normal_user:new-project' %}" class="btn btn-primary flex items-center gap-2">
-            {% include "components/icons/new.html" with class="w-6 h-6" %}
-            New Project
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Dashboard
         </a>
-    </div>
 
-    <!-- Filters -->
-    <form method="GET" class="card p-4 mb-6 space-y-4">
-        <div class="relative">
-            {% include "components/icons/search.html" with class="absolute left-3 top-1\/2 -translate-y-1\/2 w-4 h-4 text-muted-foreground" %}
-            <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search projects..." class="input pl-16 w-full">
+        <div class="card p-8 rounded-lg">
+        <div class="flex justify-between items-center mb-6">
+            <div class="space-y-2">
+                <h1 class="text-2xl font-bold">My Projects</h1>
+                <p class="text-muted-foreground">Manage and continue your land appraisal projects</p>
+            </div>
+            <a href="{% url 'normal_user:new-project' %}" class="btn btn-primary inline-flex items-center gap-2">
+                {% include "components/icons/new.html" with class="w-6 h-6" %}
+                <span>New Project</span>
+            </a>
         </div>
 
-        <div class="flex flex-wrap gap-3">
-            <!-- Land type -->
-            <select name="land_type" class="input w-48">
-                <option value="">All Land Types</option>
-                {% for lt in land_types %}
-                    <option value="{{ lt }}" {% if request.GET.land_type == lt %}selected{% endif %}>{{ lt }}</option>
-                {% endfor %}
-            </select>
+        <form method="GET" class="card p-6 mb-8 space-y-4">
+           <!-- Search Input -->
+    <div class="flex w-full border rounded-lg bg-card overflow-hidden">
+        <!-- Search Input -->
+        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search projects..." class="input pl-4 w-full border-none bg-card">
 
-            <!-- Political -->
-            <select select name="political" class="input w-48">
-                <option value="">All Classifications</option>
-                {% for p in political_types %}
-                    <option value="{{ p }}" {% if request.GET.political == p %}selected{% endif %}>{{ p }}</option>
-                {% endfor %}
-            </select>
-
-            <!-- Status -->
-            <select name="status" class="input w-48">
-                <option value="">All Statuses</option>
-                {% for s in statuses %}
-                    <option value="{{ s }}" {% if request.GET.status == s %}selected{% endif %}>{{ s }}</option>
-                {% endfor %}
-            </select>
-
-
-            <!-- Sort -->
-            <select name="sort" class="input w-48">
-                <option value="-date_created">Newest First</option>
-                <option value="date_created">Oldest First</option>
-                <option value="name">Name A-Z</option>
-                <option value="-name">Name Z-A</option>
-                <option value="-estimated_price">Price: High to Low</option>
-                <option value="estimated_price">Price: Low to High</option>
-            </select>
-
-            <button class="btn btn-secondary">Apply Filters</button>
-            <a href="{% url 'normal_user:projects'%}" class="btn btn-outline">Clear</a>
-        </div>
-    </form>
-
-    <!-- Results count -->
-    <p class="text-sm text-muted-foreground mb-4">
-        Showing <span class="font-medium text-foreground">{{ projects|length }}</span> project{{ projects|length|pluralize }}
-    </p>
-
-    <!-- Grid -->
-    <section>
-    <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        {% for project in projects %}
-    <div class="project-box">
-
-        <h3>{{ project.title }}</h3>
-
-        <p><strong>Land Type:</strong> {{ project.get_land_type_display }}</p>
-        <p><strong>Political Type:</strong> {{ project.get_political_display }}</p>
-        <p><strong>Status:</strong> {{ project.get_status_display }}</p>
-
+        <!-- Clickable Icon -->
+        <button type="submit" class="flex items-center justify-center px-4 text-muted-foreground hover:opacity-80 transition">
+            {% include "components/icons/search.html" with class="w-6 h-6" %}
+        </button>
     </div>
-{% endfor %}
 
-</section>
+    <!-- Select Filters -->
+    <div class="flex gap-4 flex-wrap">
+        <!-- Land Type -->
+        <select name="land_type" class="select">
+            <option value="">All Land Types</option>
+            {% for land_type in land_types %}
+            <option value="{{ land_type.0 }}" {% if request.GET.land_type == land_type.0 %}selected{% endif %}>
+                {{ land_type.1 }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <!-- Classification -->
+        <select name="classification" class="select">
+            <option value="">All Classifications</option>
+            {% for classification in classifications %}
+            <option value="{{ classification.0 }}" {% if request.GET.classification == classification.0 %}selected{% endif %}>
+                {{ classification.1 }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <!-- Status -->
+        <select name="status" class="select">
+            <option value="">All Statuses</option>
+            {% for status in statuses %}
+            <option value="{{ status.0 }}" {% if request.GET.status == status.0 %}selected{% endif %}>
+                {{ status.1 }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <!-- Sort -->
+        <select name="sort" class="select">
+            <option value="-created_at" {% if request.GET.sort == '-created_at' %}selected{% endif %}>Newest First</option>
+            <option value="created_at" {% if request.GET.sort == 'created_at' %}selected{% endif %}>Oldest First</option>
+        </select>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-2 flex-wrap">
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <a href="{% url 'normal_user:projects' %}" class="btn btn-secondary">Clear</a>
+    </div>
+        </form>
+
+        <p class="text-muted-foreground mb-4">Showing {{ projects|length }} project{{ projects|pluralize }}</p>
+
+        <div class="grid gap-6">
+            {% for project in projects %}
+            <div class="card p-6 rounded-lg shadow-soft space-y-3">
+                <h2 class="text-xl font-semibold">{{ project.title }}</h2>
+                <div class="space-y-2 text-muted-foreground">
+                    <p>Land Type: {{ project.get_land_type_display }}</p>
+                    <p>Political Type: {{ project.get_political_display }}</p>
+                    <p>Status: {{ project.get_status_display }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 {% endblock %}
