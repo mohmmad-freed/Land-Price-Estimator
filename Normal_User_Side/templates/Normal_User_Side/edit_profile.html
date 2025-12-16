@@ -3,6 +3,18 @@
 {% block title %}Profile - Land Appraisal System{% endblock %}
 
 {% block content %}
+
+{% if form.errors %}
+  <div class="mb-4 rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      {% for error in field.errors %}
+        <div>{{ error }}</div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+{% endif %}
+
 <div class="max-w-3xl mx-auto px-4 py-10">
     <!-- Page Header with Gradient -->
     <div class="gradient-header rounded-xl p-8 mb-8 shadow-large animate-fade-in">
@@ -28,9 +40,9 @@
                 </label>
                 <input 
                     type="text" 
-                    name="full_name" 
+                    name="name" 
                     class="form-input" 
-                    value="{{ user.name|default:'' }}"
+                    value="{{ form.name.value|default:'' }}"
                     placeholder="Enter your full name"
                     required
                 />
@@ -51,7 +63,7 @@
                     type="email" 
                     name="email" 
                     class="form-input" 
-                    value="{{ user.email|default:'' }}"
+                    value="{{ form.email.value|default:'' }}"
                     placeholder="Enter your email"
                     required
                 />
@@ -71,7 +83,7 @@
                     type="tel" 
                     name="phone" 
                     class="form-input" 
-                    value="{{ user.phone|default:'' }}"
+                    value="{{ form.phone.value|default:'' }}"
                     placeholder="Enter your phone number"
                 />
             </div>
@@ -135,26 +147,7 @@
     </div>
 </div>
 
-<script>
-// Password toggle functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const passwordToggle = document.getElementById('passwordToggle');
-    const passwordFields = document.getElementById('passwordFields');
-    const passwordChevron = document.getElementById('passwordChevron');
-    
-    passwordToggle.addEventListener('click', function() {
-        passwordFields.classList.toggle('show');
-        passwordToggle.classList.toggle('active');
-        
-        // Rotate chevron
-        if (passwordFields.classList.contains('show')) {
-            passwordChevron.style.transform = 'rotate(180deg)';
-        } else {
-            passwordChevron.style.transform = 'rotate(0deg)';
-        }
-    });
-});
-</script>
+
 
     
 {% endblock %}
