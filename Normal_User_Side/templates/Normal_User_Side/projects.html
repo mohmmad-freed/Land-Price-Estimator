@@ -51,11 +51,11 @@
         </select>
 
         <!-- Classification -->
-        <select name="classification" class="select">
+        <select name="political_types" class="select">
             <option value="">All Classifications</option>
-            {% for classification in classifications %}
-            <option value="{{ classification.0 }}" {% if request.GET.classification == classification.0 %}selected{% endif %}>
-                {{ classification.1 }}
+            {% for political_type in political_types %}
+            <option value="{{ political_type.0 }}" {% if request.GET.political_type == political_type.0 %}selected{% endif %}>
+                {{ political_type.1 }}
             </option>
             {% endfor %}
         </select>
