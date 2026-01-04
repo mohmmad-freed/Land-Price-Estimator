@@ -38,44 +38,45 @@
         </button>
     </div>
 
-    <!-- Select Filters -->
-    <div class="flex gap-4 flex-wrap">
-        <!-- Land Type -->
-        <select name="land_type" class="select">
-            <option value="">All Land Types</option>
-            {% for land_type in land_types %}
-            <option value="{{ land_type.0 }}" {% if request.GET.land_type == land_type.0 %}selected{% endif %}>
-                {{ land_type.1 }}
+   <!-- Select Filters -->
+<div class="flex gap-4 flex-wrap">
+    <!-- Land Type -->
+    <select name="land_type" class="select">
+        <option value="">All Land Types</option>
+        {% for code, name in land_types %}
+            <option value="{{ code }}" {% if request.GET.land_type == code %}selected{% endif %}>
+                {{ name }}
             </option>
-            {% endfor %}
-        </select>
+        {% endfor %}
+    </select>
 
-        <!-- Classification -->
-        <select name="political_types" class="select">
-            <option value="">All Classifications</option>
-            {% for political_type in political_types %}
-            <option value="{{ political_type.0 }}" {% if request.GET.political_type == political_type.0 %}selected{% endif %}>
-                {{ political_type.1 }}
+    <!-- Political Classification -->
+    <select name="political_type" class="select">
+        <option value="">All Classifications</option>
+        {% for code, name in political_types %}
+            <option value="{{ code }}" {% if request.GET.political_type == code %}selected{% endif %}>
+                {{ name }}
             </option>
-            {% endfor %}
-        </select>
+        {% endfor %}
+    </select>
 
-        <!-- Status -->
-        <select name="status" class="select">
-            <option value="">All Statuses</option>
-            {% for status in statuses %}
-            <option value="{{ status.0 }}" {% if request.GET.status == status.0 %}selected{% endif %}>
-                {{ status.1 }}
+    <!-- Status -->
+    <select name="status" class="select">
+        <option value="">All Statuses</option>
+        {% for code, name in statuses %}
+            <option value="{{ code }}" {% if request.GET.status == code %}selected{% endif %}>
+                {{ name }}
             </option>
-            {% endfor %}
-        </select>
+        {% endfor %}
+    </select>
 
-        <!-- Sort -->
-        <select name="sort" class="select">
-            <option value="-created_at" {% if request.GET.sort == '-created_at' %}selected{% endif %}>Newest First</option>
-            <option value="created_at" {% if request.GET.sort == 'created_at' %}selected{% endif %}>Oldest First</option>
-        </select>
-    </div>
+    <!-- Sort -->
+    <select name="sort" class="select">
+        <option value="-date_created" {% if request.GET.sort == '-date_created' %}selected{% endif %}>Newest First</option>
+        <option value="date_created" {% if request.GET.sort == 'date_created' %}selected{% endif %}>Oldest First</option>
+    </select>
+</div>
+
 
     <!-- Buttons -->
     <div class="flex gap-2 flex-wrap">

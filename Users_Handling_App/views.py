@@ -82,7 +82,7 @@ def register(request):
         code_obj.save()
 
         login(request, user)
-        messages.success(request, f"Account created successfully as {user.type}.")
+        messages.success(request, f"Account created successfully as {user.get_type_display()}.")
         return redirect('users:login')
 
     return render(request, 'Users_Handling_App/register.html')

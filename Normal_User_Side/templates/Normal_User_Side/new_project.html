@@ -22,152 +22,46 @@
         <!-- Project Name -->
         <div class="mb-6">
             <label class="block font-medium mb-1">Project Name *</label>
-            <input 
-                type="text"
-                name="project_name"
-                required
-                class="w-full px-4 py-2 border rounded-lg"
-            >
+            {{ form.name }}
+            {{ form.name.errors }}
         </div>
 
         <!-- Governorate -->
         <div class="mb-6">
             <label class="block font-medium mb-1">Governorate *</label>
-            <select 
-                name="governorate"
-                required
-                class="w-full px-4 py-2 border rounded-lg"
-            >
-                <option value="">Select Governorate</option>
-                {% for gov in governorates %}
-                    <option value="{{ gov.id }}">{{ gov.name }}</option>
-                {% endfor %}
-            </select>
+            {{ form.governorate }}
+            
         </div>
 
-        <!-- City / Town -->
-        <div class="mb-6">
-            <label class="block font-medium mb-1">City / Town *</label>
-            <select 
-                name="city"
-                required
-                class="w-full px-4 py-2 border rounded-lg"
-                disabled
-            >
-                <option value="">Select a Governorate first</option>
-            </select>
-        </div>
-
-        <!-- Neighborhood -->
-        <div class="mb-6">
-            <label class="block font-medium mb-1">Neighborhood *</label>
-            <select 
-                name="neighborhood"
-                required
-                class="w-full px-4 py-2 border rounded-lg"
-                disabled
-            >
-                <option value="">Select a City/Town first</option>
-            </select>
-        </div>
+       
 
         <!-- Land Size -->
         <div class="mb-6">
             <label class="block font-medium mb-1">Land Size (sq. meters) *</label>
-            <input 
-                type="number"
-                name="land_size"
-                required
-                min="1"
-                class="w-full px-4 py-2 border rounded-lg"
-            >
+            {{ form.land_size }}
+        {{ form.land_size.errors }}
         </div>
 
         <!-- Land Type -->
         <div class="mb-6">
             <label class="block font-medium mb-1">Land Type *</label>
-            <select 
-                name="land_type"
-                required
-                class="w-full px-4 py-2 border rounded-lg"
-            >
-                <option value="">Select</option>
-                {% for lt in land_types %}
-                    <option value="{{ lt.id }}">{{ lt.name }}</option>
-                {% endfor %}
-            </select>
+            {{ form.land_type }}
         </div>
 
         <!-- Political Classification -->
         <div class="mb-6">
             <label class="block font-medium mb-1">Political Classification *</label>
-            <select 
-                name="political_classification"
-                required
-                class="w-full px-4 py-2 border rounded-lg"
-            >
-                <option value="">Select</option>
-                {% for pc in political_classes %}
-                    <option value="{{ pc.id }}">{{ pc.name }}</option>
-                {% endfor %}
-            </select>
+            {{ form.political_classification }}
         </div>
 
-        <!-- Infrastructure -->
-        <div class="mb-6">
-            <label class="block font-medium mb-2">Infrastructure Available</label>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-
-                {% for infra in infrastructures %}
-                <label class="flex items-center space-x-2 border p-3 rounded-lg cursor-pointer hover:bg-muted">
-                    <input 
-                        type="checkbox"
-                        name="infrastructure"
-                        value="{{ infra.id }}"
-                        class="w-4 h-4"
-                    >
-                    <span>{{ infra }}</span>
-                </label>
-                {% endfor %}
-
-            </div>
-        </div>
-
-        <!-- Zoning / Usage Restrictions -->
-        <div class="mb-6">
-    <label class="block font-medium mb-2">Zoning / Usage Restrictions</label>
-
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-
-        {% for Restriction in Restrictions %}
-        <label class="flex items-center space-x-2 border p-3 rounded-lg cursor-pointer hover:bg-muted">
-            <input 
-                type="checkbox"
-                name="zoning"
-                value="{{ zone.id }}"
-                class="w-4 h-4"
-            >
-            <span>{{ Restriction }}</span>
-        </label>
-        {% endfor %}
-
-    </div>
-</div>
-
-
-
+        
 
 
 
         <!-- Description -->
         <div class="mb-6">
             <label class="block font-medium mb-1">Description</label>
-            <textarea
-                name="description"
-                rows="5"
-                class="w-full px-4 py-2 border rounded-lg"
-            ></textarea>
+            {{ form.description }}
         </div>
 
         <!-- Submit -->

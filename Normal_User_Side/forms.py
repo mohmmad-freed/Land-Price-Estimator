@@ -5,6 +5,9 @@ from django.core.exceptions import ValidationError
 import re
 from django.contrib.auth.hashers import check_password
 
+from Normal_User_Side.models import Project
+
+
 User = get_user_model()
 
 class UserForm(forms.ModelForm):
@@ -41,3 +44,25 @@ class UserForm(forms.ModelForm):
         if phone and not re.match(r'^\+?[0-9]{7,15}$', phone):
             raise ValidationError("Enter a valid phone number.")
         return phone
+    
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = [
+            'name',
+            'governorate',
+            'land_type',
+            'political_classification',
+            'status',
+            'description',
+            'land_size'
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg'}),
+            'governorate': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg'}),
+            'land_size': forms.NumberInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg', 'min': 1}),
+            'land_type': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg'}),
+            'political_classification': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg'}),
+            'description': forms.Textarea(attrs={'class': 'w-full px-4 py-2 border rounded-lg', 'rows': 5}),
+        }

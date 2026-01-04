@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from .models import Project
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm
+from .forms import UserForm, ProjectForm
 
 
 User = get_user_model()
@@ -35,14 +35,49 @@ def editProfile(request):
 
 
 def newProject(request):
-     infrastructures = ["Water", "Electricity", "Internet", "Road Access"]
-     Restrictions = ["Residential Only", "Commercial Allowed", "Industrial Restricted"]
-     context = {'infrastructures': infrastructures, 'Restrictions': Restrictions}
-     return render(request, 'Normal_User_Side/new_project.html', context)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.user = request.user
+            # Determine status based on the button clicked
+            action = request.POST.get('action')
+            if action == 'save':
+                project.status = 'draft'
+            elif action == 'estimate':
+                project.status = 'completed'
+                # Here you can call your ML model to estimate the price
+                # e.g., project.price = estimate_price(project)
+
+            project.save()
+
+            # Optionally redirect after saving
+            return redirect('normal_user:projects') 
+    else:
+        form = ProjectForm()
+     
+
+    context = {'form':form}
+    return render(request, 'Normal_User_Side/new_project.html', context)
 
 
 def viewProjects(request):
-     projects = Project.objects.all().order_by('-date_created')
+     projects = Project.objects.filter(user=request.user).order_by('-date_created')
+      # Get filter parameters from GET request
+     land_type = request.GET.get('land_type')
+     political_type = request.GET.get('political_type')
+     status = request.GET.get('status')
+     search_query = request.GET.get('search')
+
+    # Apply filters in the view
+     if land_type:
+        projects = projects.filter(land_type=land_type)
+     if political_type:
+        projects = projects.filter(political_classification=political_type)
+     if status:
+        projects = projects.filter(status=status)
+     if search_query:
+        projects = projects.filter(name__icontains=search_query)
      context = {
         'projects': projects,
         'land_types': Project.LAND_TYPES,
