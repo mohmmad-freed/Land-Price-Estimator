@@ -42,7 +42,7 @@ def newProject(request):
         if form.is_valid():
             project = form.save(commit=False)
             project.user = request.user
-            if 'estimate' in request.POST:
+            if request.POST.get('action') == 'estimate':
                 project.estimated_price = predict_land_price(project)
                 project.status = 'completed'
             else:
