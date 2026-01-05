@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
+
+from .ml.predict import predict_land_price
 from .models import Project
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, ProjectForm
@@ -40,18 +42,15 @@ def newProject(request):
         if form.is_valid():
             project = form.save(commit=False)
             project.user = request.user
-            # Determine status based on the button clicked
-            action = request.POST.get('action')
-            if action == 'save':
-                project.status = 'draft'
-            elif action == 'estimate':
+            if 'estimate' in request.POST:
+                project.estimated_price = predict_land_price(project)
                 project.status = 'completed'
-                # Here you can call your ML model to estimate the price
-                # e.g., project.price = estimate_price(project)
+            else:
+                project.status = 'draft'
 
             project.save()
 
-            # Optionally redirect after saving
+            
             return redirect('normal_user:projects') 
     else:
         form = ProjectForm()
