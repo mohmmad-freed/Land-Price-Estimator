@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 
@@ -51,9 +52,12 @@ def newProject(request):
                     "political_classification": project.political_classification,
                     
                 }
-
-                project.estimated_price = predict_land_price(input_data)
-                project.status = 'completed'
+                try:
+                    project.estimated_price = predict_land_price(input_data)
+                    project.status = 'completed'
+                except Exception as e:
+                    messages.error(request, "Price estimation failed. Please try again later.")
+                    project.status = 'draft'
             else:
                 project.status = 'draft'
 
