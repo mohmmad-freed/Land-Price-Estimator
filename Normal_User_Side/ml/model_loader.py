@@ -1,10 +1,16 @@
 import joblib
-import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / "land_price_model.joblib"
 
-MODEL_PATH = os.path.join(BASE_DIR, "ml", "land_price_model.pkl")
-FEATURES_PATH = os.path.join(BASE_DIR, "ml", "model_features.pkl")
+model = None
+model_features = None
 
-model = joblib.load(MODEL_PATH)
-model_features = joblib.load(FEATURES_PATH)
+def load_model():
+    global model, model_features
+    if model is None:
+        model = joblib.load(MODEL_PATH)
+        model_features = model.feature_names_in_
+    return model, model_features
+
