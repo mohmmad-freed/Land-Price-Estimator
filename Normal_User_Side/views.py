@@ -42,22 +42,28 @@ def newProject(request):
         if form.is_valid():
             project = form.save(commit=False)
             project.user = request.user
+
             if request.POST.get('action') == 'estimate':
-                project.estimated_price = predict_land_price(project)
+                input_data = {
+                    "governorate": project.governorate,
+                    "land_size": project.land_size,
+                    "land_type": project.land_type,
+                    "political_classification": project.political_classification,
+                    
+                }
+
+                project.estimated_price = predict_land_price(input_data)
                 project.status = 'completed'
             else:
                 project.status = 'draft'
 
             project.save()
+            return redirect('normal_user:projects')
 
-            
-            return redirect('normal_user:projects') 
     else:
         form = ProjectForm()
-     
 
-    context = {'form':form}
-    return render(request, 'Normal_User_Side/new_project.html', context)
+    return render(request, 'Normal_User_Side/new_project.html', {'form': form})
 
 
 def viewProjects(request):
@@ -88,5 +94,3 @@ def viewProjects(request):
 
 def settings(request):
      return render(request, 'Normal_User_Side/settings.html')
-
-

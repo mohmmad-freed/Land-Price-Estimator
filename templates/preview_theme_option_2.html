@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land Price Estimator - Option 2 Preview</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-glass">
+        <div class="container flex justify-between items-center">
+            <a href="#" class="nav-brand">
+                <span style="font-size: 1.5rem;">🌿</span>
+                Land Price Estimator
+            </a>
+            <div class="flex items-center">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how" class="nav-link">How it Works</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="#" class="btn btn-primary" style="margin-left: var(--spacing-6);">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header style="padding-top: 120px; padding-bottom: 80px; position: relative; overflow: hidden;">
+        <!-- Abstract Background Blob -->
+        <div style="position: absolute; top: -10%; right: -5%; width: 600px; height: 600px; background: radial-gradient(circle, var(--color-primary-200) 0%, transparent 70%); opacity: 0.6; z-index: -1;"></div>
+        
+        <div class="container grid" style="grid-template-columns: 1fr 1fr; gap: var(--spacing-8); align-items: center;">
+            <div>
+                <span style="color: var(--color-primary-600); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Smart Valuation</span>
+                <h1 style="font-size: var(--font-size-5xl); line-height: 1.1; margin: var(--spacing-4) 0;">
+                    Know Your Land's <br>
+                    <span style="color: var(--color-primary-500);">True Value</span>
+                </h1>
+                <p style="font-size: var(--font-size-lg); color: var(--color-text-muted); margin-bottom: var(--spacing-8); max-width: 500px;">
+                    AI-driven valuations for a sustainable future. Assess environmental value, soil quality, and market trends instantly.
+                </p>
+
+                <!-- Floating Prediction Form -->
+                <div class="input-floating-wrapper" style="max-width: 500px;">
+                    <span style="padding-left: var(--spacing-4); color: var(--color-primary-500);">📍</span>
+                    <input type="text" class="input-floating" placeholder="Enter address, city, or coordinates...">
+                    <button class="btn btn-primary">Forecast</button>
+                </div>
+            </div>
+
+            <!-- Hero Image / Visual -->
+            <div style="position: relative;">
+                <!-- Result Preview Card (Floating) -->
+                <div class="card card-glass" style="max-width: 400px; margin: 0 auto; transform: rotate(-2deg);">
+                    <div style="height: 200px; background-color: #e0f2fe; border-radius: var(--radius-lg); margin-bottom: var(--spacing-4); display: flex; align-items: center; justify-content: center; color: var(--color-primary-300);">
+                        (Map View Placeholder)
+                    </div>
+                    
+                    <div class="flex justify-between items-center" style="margin-bottom: var(--spacing-2);">
+                        <div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Estimated Range</div>
+                            <div class="badge-price">$450,000 - $495,000</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Confidence</div>
+                            <div style="color: var(--color-primary-600); font-weight: 700;">High (92%)</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--color-secondary-200);">
+                        <div class="flex justify-between" style="font-size: var(--font-size-sm);">
+                            <span>Sustainability Score:</span>
+                            <span style="font-weight: 600; color: var(--color-primary-700);">92/100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" style="padding: 80px 0;">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <h2>Why Choose Us?</h2>
+                <p style="color: var(--color-text-muted);">Advanced metrics that go beyond simple price per square foot.</p>
+            </div>
+
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-8);">
+                <!-- Feature 1 -->
+                <div class="card">
+                    <div class="feature-icon-wrapper">🌱</div>
+                    <h3>AI-Powered Insights</h3>
+                    <p style="color: var(--color-text-muted);">Leverage advanced algorithms for precise land valuation based on real-time market data.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card">
+                    <div class="feature-icon-wrapper">🌍</div>
+                    <h3>Eco-Conscious Data</h3>
+                    <p style="color: var(--color-text-muted);">Assess environmental value, including soil quality, carbon credits, and sustainable potential.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card">
+                    <div class="feature-icon-wrapper">🛡️</div>
+                    <h3>Future-Proof Forecasting</h3>
+                    <p style="color: var(--color-text-muted);">Predict long-term land value considering climate trends and sustainable urban planning.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how" style="padding: 80px 0; background-color: var(--color-primary-50);">
+        <div class="container">
+            <h2 class="text-center" style="margin-bottom: 60px;">Simplified Valuation Process</h2>
+            
+            <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: var(--spacing-4);">
+                <!-- Step 1 -->
+                <div class="text-center">
+                    <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">1</div>
+                    <h4>Enter Details</h4>
+                    <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Input location, size, and land type.</p>
+                </div>
+                 <!-- Step 2 -->
+                 <div class="text-center">
+                    <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">2</div>
+                    <h4>AI Analysis</h4>
+                    <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">System computes market & eco factors.</p>
+                </div>
+                 <!-- Step 3 -->
+                 <div class="text-center">
+                    <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">3</div>
+                    <h4>Receive Report</h4>
+                    <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Get instant valuation & trends.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: white; padding: 60px 0; border-top: 1px solid var(--color-secondary-100); margin-top: 80px;">
+        <div class="container text-center">
+            <a href="#" class="nav-brand justify-center" style="margin-bottom: var(--spacing-4);">
+                <span style="font-size: 1.5rem;">🌿</span>
+                Land Price Estimator
+            </a>
+            <p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">
+                &copy; 2026 Land Price Estimator. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
