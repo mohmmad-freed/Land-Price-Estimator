@@ -5,10 +5,14 @@
 
 {% block main_wrapper %}
 <!-- Hero Section -->
-<header style="padding-top: 80px; padding-bottom: 80px; position: relative; overflow: hidden;">
-    <!-- Abstract Background Blob -->
+<header class="bg-background" style="padding-top: 80px; padding-bottom: 80px; position: relative; overflow: hidden;">
+    <!-- Abstract Background Blob 1 -->
     <div
-        style="position: absolute; top: -10%; right: -5%; width: 600px; height: 600px; background: radial-gradient(circle, var(--color-primary-200) 0%, transparent 70%); opacity: 0.6; z-index: -1;">
+        style="position: absolute; top: -10%; right: -5%; width: 600px; height: 600px; background: var(--blob-gradient-1); opacity: 0.6; z-index: -1;">
+    </div>
+    <!-- Abstract Background Blob 2 (Added for symmetry) -->
+    <div
+        style="position: absolute; bottom: -10%; left: -5%; width: 600px; height: 600px; background: var(--blob-gradient-2); opacity: 0.6; z-index: -1;">
     </div>
 
     <div class="container grid md:grid-cols-2 gap-8 items-center"
@@ -37,11 +41,11 @@
 
         <!-- Login Form (Replacing Visual) -->
         <div style="position: relative;">
-            <div class="card glass-card p-8 w-full max-w-md mx-auto"
+            <div class="card card-glass p-8 w-full max-w-md mx-auto"
                 style="border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);">
 
                 <div class="text-center mb-6">
-                    <h2 class="text-2xl font-semibold mb-2" style="color: var(--color-primary-900);">Welcome Back</h2>
+                    <h2 class="text-2xl font-semibold mb-2" style="color: var(--color-text-main);">Welcome Back</h2>
                     <p class="text-sm text-muted-foreground">Sign in to access your dashboard</p>
                 </div>
 
@@ -79,7 +83,7 @@
                     <!-- Forgot Password -->
                     <div class="text-center mt-4">
                         <a href="{% url 'users:password_reset' %}" class="text-sm text-primary hover:underline"
-                            style="color: var(--color-primary-600);">
+                            style="color: var(--color-primary-500);">
                             Forgot password?
                         </a>
                     </div>
@@ -89,7 +93,7 @@
                 <div class="mt-6 text-center pt-4 border-t border-border">
                     <span class="text-sm text-muted-foreground">New here?</span>
                     <a href="{% url 'users:register' %}" class="text-sm font-semibold hover:underline"
-                        style="color: var(--color-primary-600);">
+                        style="color: var(--color-primary-500);">
                         Create an account
                     </a>
                 </div>
@@ -137,7 +141,7 @@
         <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: var(--spacing-4);">
             <div class="text-center">
                 <div
-                    style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">
+                    style="width: 50px; height: 50px; background: var(--color-surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">
                     1</div>
                 <h4>Login / Register</h4>
                 <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Create your secure account.
@@ -145,7 +149,7 @@
             </div>
             <div class="text-center">
                 <div
-                    style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">
+                    style="width: 50px; height: 50px; background: var(--color-surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">
                     2</div>
                 <h4>Enter Details</h4>
                 <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Input land location & size.
@@ -153,7 +157,7 @@
             </div>
             <div class="text-center">
                 <div
-                    style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">
+                    style="width: 50px; height: 50px; background: var(--color-surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; color: var(--color-primary-600); border: 2px solid var(--color-primary-200);">
                     3</div>
                 <h4>Get Estimate</h4>
                 <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Instant AI valuation report.
@@ -164,7 +168,8 @@
 </section>
 
 <!-- Footer -->
-<footer style="background: white; padding: 60px 0; border-top: 1px solid var(--color-secondary-100); margin-top: 80px;">
+<footer class="bg-background"
+    style="padding: 60px 0; border-top: 1px solid var(--color-secondary-100); margin-top: 80px;">
     <div class="container text-center">
         <a href="#" class="nav-brand justify-center" style="margin-bottom: var(--spacing-4);">
             <span style="font-size: 1.5rem;">🌿</span>

@@ -4,16 +4,17 @@
         <div class="flex items-center justify-between h-full">
 
             <!-- Logo -->
-            <a href="{% url 'normal_user:dashboard'%}">
+            <a
+                href="{% if request.user.is_authenticated %}{% url 'normal_user:dashboard' %}{% else %}{% url 'users:login' %}{% endif %}">
                 <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
-                        <span class="text-primary-foreground font-bold">LA</span>
-                    </div>
+                    <span style="font-size: 1.75rem;">🌿</span>
                     <h1 class="text-lg font-semibold text-foreground">
                         Land Appraisal System
                     </h1>
                 </div>
             </a>
+
+
 
 
 

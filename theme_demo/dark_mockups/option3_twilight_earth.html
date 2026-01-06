@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Option 3: Twilight Earth</title>
+    <style>
+        /* Base Reset & Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap');
+
+        :root {
+            /* Shared Spacing & Radius */
+            --spacing-4: 1rem;
+            --spacing-8: 2rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+
+            /* PRIMARY COLOR (Kept Constant) */
+            --color-primary-500: #10B981;
+            --color-primary-600: #059669;
+        }
+
+        /* 
+         OPTION 3: TWILIGHT EARTH (Stone/Warm Grey)
+         Concept: A warmer, organic dark mode using Stone colors. 
+         Feels more "grounded" and less "digital" than Slate.
+        */
+        :root[data-theme="dark"] {
+            /* Backgrounds (Stone Palette) */
+            --color-background: #0c0a09;
+            /* Stone 950 */
+            --color-surface: #1c1917;
+            /* Stone 900 */
+
+            /* Text */
+            --color-text-main: #fafaf9;
+            /* Stone 50 */
+            --color-text-muted: #a8a29e;
+            /* Stone 400 */
+
+            /* Borders */
+            --color-border: #292524;
+            /* Stone 800 */
+
+            /* Glass */
+            --glass-bg: rgba(28, 25, 23, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Components */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        @media(min-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(min-width: 768px) {
+            .grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-primary-500);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: #292524;
+            color: var(--color-text-main);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: #44403c;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background: #0c0a09;
+            border: 1px solid var(--color-border);
+            color: white;
+            margin-bottom: 1rem;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-primary-500);
+            outline: none;
+        }
+
+        .text-primary {
+            color: var(--color-primary-500);
+        }
+
+        .text-muted {
+            color: var(--color-text-muted);
+        }
+
+        .navbar {
+            padding: 1rem 0;
+            background: rgba(12, 10, 9, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 800; font-size: 1.25rem; font-family: 'Outfit'; color: var(--color-text-main);">
+                <span style="color: #10B981;">🌿</span> LandEstimator
+            </div>
+            <div>
+                <span style="font-size: 0.9rem; margin-right: 1rem; color: var(--color-text-muted);">Option 3: Twilight
+                    Earth</span>
+                <button class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <header style="padding: 80px 0; overflow: hidden; position: relative;">
+        <!-- Background Gradient -->
+        <div
+            style="position: absolute; top: -10%; right: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 60%); z-index: -1;">
+        </div>
+
+        <div class="container grid grid-cols-2" style="align-items: center;">
+            <div>
+                <span
+                    style="color: var(--color-primary-500); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Smart
+                    Valuation</span>
+                <h1 style="font-size: 3rem; line-height: 1.1; margin: 1rem 0;">
+                    Know Your Land's <br>
+                    <span class="text-primary">True Value</span>
+                </h1>
+                <p class="text-muted" style="font-size: 1.125rem; margin-bottom: 2rem; max-width: 500px;">
+                    AI-driven valuations for a sustainable future. Twilight Earth mode uses warm, stony tones for an
+                    organic feel.
+                </p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#" class="btn btn-secondary">How it works</a>
+                    <a href="#" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+
+            <div class="card glass-card">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome Back</h2>
+                    <p class="text-muted">Sign in to access your dashboard</p>
+                </div>
+                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Email</label>
+                <input type="text" class="form-input" placeholder="name@example.com">
+                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Password</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In</button>
+            </div>
+        </div>
+    </header>
+
+    <section style="padding: 60px 0;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Why Choose Twilight Earth?</h2>
+            <div class="grid grid-cols-3">
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🗿</div>
+                    <h3>Organic Feel</h3>
+                    <p class="text-muted">Warm grey tones (Stone) feel more natural and earthy compared to electrical
+                        blues.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">👁️</div>
+                    <h3>Comfort</h3>
+                    <p class="text-muted">Less harsh contrast than pure black, reducing blue light exposure.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🌟</div>
+                    <h3>Premium Vibe</h3>
+                    <p class="text-muted">Used by high-end typography and editorial sites for a sophisticated look.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

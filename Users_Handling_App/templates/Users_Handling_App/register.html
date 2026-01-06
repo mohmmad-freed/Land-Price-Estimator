@@ -1,96 +1,140 @@
 {% extends 'Normal_User_Side/base_dashboard.html' %}
+{% load static %}
 
 {% block title %}Register - Land Appraisal System{% endblock %}
 
-{% block content %}
-
-<div class="min-h-screen flex items-center justify-center px-4">
-    <div class="bg-card border border-border rounded-lg shadow-md p-8 w-full max-w-md">
-
-        <!-- Title -->
-        <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
-
-        <!-- Registration Form -->
-        <form method="POST" class="space-y-4">
-            {% csrf_token %}
-
-            <!-- Name -->
-            <div>
-                <label for="name" class="text-sm font-medium">Name</label>
-                <input 
-                    type="text" 
-                    id="name" 
-                    name="name"
-                    required
-                >
-            </div>
-
-            <!-- Email -->
-            <div>
-                <label for="email" class="text-sm font-medium">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email"
-                    required
-                >
-            </div>
-
-            <!-- Password -->
-            <div>
-                <label for="password" class="text-sm font-medium">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password"
-                    required
-                >
-            </div>
-
-            <!-- Activation Code -->
-            <div>
-                <label for="activation_code" class="text-sm font-medium">Activation Code</label>
-                <input 
-                    type="text" 
-                    id="activation_code" 
-                    name="activation_code"
-                    required
-                    placeholder="Enter your activation code"
-                >
-            </div>
-
-            <!-- Error Message if exists -->
-            {% if messages %}
-            <div>
-                {% for message in messages %}
-                    <p class="error-message">{{ message }}</p>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- Register Button -->
-            <button 
-                type="submit" 
-                class="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium"
-            >
-                Register
-            </button>
-        </form>
-
-        <!-- Login Link -->
-        <div class="mt-6 text-center flex items-center justify-center space-x-2">
-            <span class="text-sm text-muted-foreground">Already have an account?</span>
-            <a 
-                href="{% url 'users:login' %}"
-                class="text-sm bg-secondary text-secondary-foreground px-3 py-1 rounded transition"
-            >
-                Login
-            </a>
-        </div>
-
+{% block main_wrapper %}
+<!-- Hero Section -->
+<header class="bg-background" style="padding-top: 80px; padding-bottom: 80px; position: relative; overflow: hidden;">
+    <!-- Abstract Background Blob 1 -->
+    <div
+        style="position: absolute; top: -10%; right: -5%; width: 600px; height: 600px; background: var(--blob-gradient-1); opacity: 0.6; z-index: -1;">
     </div>
-</div>
+    <!-- Abstract Background Blob 2 -->
+    <div
+        style="position: absolute; bottom: -10%; left: -5%; width: 600px; height: 600px; background: var(--blob-gradient-2); opacity: 0.6; z-index: -1;">
+    </div>
 
+    <!-- Registration Card (centered) -->
+    <div class="container" style="max-width: 600px; margin: 0 auto;">
+        <div class="card card-glass p-8 w-full" style="border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);">
 
+            <div class="text-center mb-6">
+                <span style="font-size: 2.5rem;">🌿</span>
+                <h2 class="text-2xl font-semibold mb-2" style="color: var(--color-text-main);">Create Your Account</h2>
+                <p class="text-sm text-muted-foreground">Join us to start estimating land value</p>
+            </div>
 
-{% endblock content %}
+            <!-- Registration Form -->
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+
+                <!-- Name -->
+                <div>
+                    <label for="name" class="form-label text-sm">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-input" placeholder="Enter your full name"
+                        required>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="form-label text-sm">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="name@example.com"
+                        required>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="form-label text-sm">Password</label>
+                    <input type="password" id="password" name="password" class="form-input"
+                        placeholder="Create a strong password" required>
+                </div>
+
+                <!-- Activation Code -->
+                <div>
+                    <label for="activation_code" class="form-label text-sm">Activation Code</label>
+                    <input type="text" id="activation_code" name="activation_code" class="form-input"
+                        placeholder="Enter your activation code" required>
+                    <p class="text-xs text-muted-foreground mt-1">Contact your administrator if you don't have an
+                        activation code</p>
+                </div>
+
+                <!-- Error Messages -->
+                {% if messages %}
+                <div>
+                    {% for message in messages %}
+                    <p class="error-message text-center"
+                        style="color: var(--color-danger); font-size: var(--font-size-sm); padding: var(--spacing-2); background: rgba(239, 68, 68, 0.1); border-radius: var(--radius-md);">
+                        {{ message }}
+                    </p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Register Button -->
+                <button type="submit" class="btn btn-primary w-full justify-center mt-4" style="width: 100%;">
+                    Create Account
+                </button>
+
+                <!-- Login Link -->
+                <div class="mt-6 text-center pt-4 border-t border-border">
+                    <span class="text-sm text-muted-foreground">Already have an account?</span>
+                    <a href="{% url 'users:login' %}" class="text-sm font-semibold hover:underline"
+                        style="color: var(--color-primary-500); margin-left: var(--spacing-2);">
+                        Sign In
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</header>
+
+<!-- Benefits Section -->
+<section id="benefits" style="padding: 60px 0; background-color: var(--color-primary-50);">
+    <div class="container">
+        <h3 class="text-center mb-12" style="margin-bottom: 40px;">Why Register?</h3>
+
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-6);">
+            <div class="text-center">
+                <div
+                    style="width: 50px; height: 50px; background: var(--color-surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5rem;">
+                    📊</div>
+                <h4>Accurate Valuations</h4>
+                <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">AI-powered land price
+                    estimates</p>
+            </div>
+            <div class="text-center">
+                <div
+                    style="width: 50px; height: 50px; background: var(--color-surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5rem;">
+                    💾</div>
+                <h4>Save Your Data</h4>
+                <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Access your valuations
+                    anytime</p>
+            </div>
+            <div class="text-center">
+                <div
+                    style="width: 50px; height: 50px; background: var(--color-surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5rem;">
+                    📈</div>
+                <h4>Track Trends</h4>
+                <p style="font-size: var(--font-size-sm); color: var(--color-text-muted);">Monitor market changes over
+                    time</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-background"
+    style="padding: 40px 0; border-top: 1px solid var(--color-secondary-100); margin-top: 60px;">
+    <div class="container text-center">
+        <a href="{% url 'users:login' %}" class="nav-brand justify-center" style="margin-bottom: var(--spacing-4);">
+            <span style="font-size: 1.5rem;">🌿</span>
+            Land Price Estimator
+        </a>
+        <p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">
+            &copy; 2026 Land Price Estimator. All rights reserved.
+        </p>
+    </div>
+</footer>
+{% endblock %}
