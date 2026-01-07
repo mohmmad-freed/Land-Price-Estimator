@@ -54,7 +54,6 @@ class ProjectForm(forms.ModelForm):
             'governorate',
             'land_type',
             'political_classification',
-            'status',
             'description',
             'land_size'
         ]
