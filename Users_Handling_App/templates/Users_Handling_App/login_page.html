@@ -7,11 +7,11 @@
 <!-- Hero Section -->
 <header class="bg-background" style="padding-top: 80px; padding-bottom: 80px; position: relative; overflow: hidden;">
     <!-- Abstract Background Blob 1 -->
-    <div
+    <div class="blob-animated"
         style="position: absolute; top: -10%; right: -5%; width: 600px; height: 600px; background: var(--blob-gradient-1); opacity: 0.6; z-index: -1;">
     </div>
     <!-- Abstract Background Blob 2 (Added for symmetry) -->
-    <div
+    <div class="blob-animated"
         style="position: absolute; bottom: -10%; left: -5%; width: 600px; height: 600px; background: var(--blob-gradient-2); opacity: 0.6; z-index: -1;">
     </div>
 
@@ -19,51 +19,53 @@
         style="grid-template-columns: 1fr 1fr; gap: var(--spacing-8);">
         <!-- Hero Text -->
         <div>
-            <span
+            <span class="animate-slide-left delay-100"
                 style="color: var(--color-primary-600); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Smart
                 Valuation</span>
-            <h1 style="font-size: var(--font-size-5xl); line-height: 1.1; margin: var(--spacing-4) 0;">
+            <h1 class="animate-slide-left delay-200"
+                style="font-size: var(--font-size-5xl); line-height: 1.1; margin: var(--spacing-4) 0;">
                 Know Your Land's <br>
-                <span style="color: var(--color-primary-500);">True Value</span>
+                <span class="text-gradient-animated" style="color: var(--color-primary-500);">True Value</span>
             </h1>
-            <p
+            <p class="animate-slide-left delay-300"
                 style="font-size: var(--font-size-lg); color: var(--color-text-muted); margin-bottom: var(--spacing-8); max-width: 500px;">
                 AI-driven valuations for a sustainable future. Login to assess environmental value, soil quality, and
                 market trends instantly.
             </p>
 
-            <div class="flex items-center space-x-4">
-                <a href="#how" class="btn btn-secondary">How it works</a>
-                <a href="#features" class="btn btn-ghost" style="color: var(--color-primary-600);">Explore Features
+            <div class="flex items-center space-x-4 animate-slide-left delay-400">
+                <a href="#how" class="btn btn-secondary btn-animated">How it works</a>
+                <a href="#features" class="btn btn-ghost link-animated" style="color: var(--color-primary-600);">Explore
+                    Features
                     &rarr;</a>
             </div>
         </div>
 
         <!-- Login Form (Replacing Visual) -->
         <div style="position: relative;">
-            <div class="card card-glass p-8 w-full max-w-md mx-auto"
+            <div class="card card-glass card-interactive card-shimmer p-8 w-full max-w-md mx-auto animate-slide-up delay-200"
                 style="border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);">
 
-                <div class="text-center mb-6">
+                <div class="text-center mb-6 animate-fade delay-400">
                     <h2 class="text-2xl font-semibold mb-2" style="color: var(--color-text-main);">Welcome Back</h2>
                     <p class="text-sm text-muted-foreground">Sign in to access your dashboard</p>
                 </div>
 
-                <form method="POST" class="space-y-4">
+                <form method="POST" class="space-y-4" x-data="{ loading: false }" @submit="loading = true">
                     {% csrf_token %}
 
                     <!-- Email -->
-                    <div>
+                    <div class="animate-fade delay-500">
                         <label for="email" class="form-label text-sm">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="name@example.com"
-                            required>
+                        <input type="email" id="email" name="email" class="form-input form-input-animated"
+                            placeholder="name@example.com" required>
                     </div>
 
                     <!-- Password -->
-                    <div>
+                    <div class="animate-fade delay-600">
                         <label for="password" class="form-label text-sm">Password</label>
-                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••"
-                            required>
+                        <input type="password" id="password" name="password" class="form-input form-input-animated"
+                            placeholder="••••••••" required>
                     </div>
 
                     <!-- Error Message if exists -->
@@ -76,13 +78,15 @@
                     {% endif %}
 
                     <!-- Login Button -->
-                    <button type="submit" class="btn btn-primary w-full justify-center mt-4" style="width: 100%;">
+                    <button type="submit"
+                        class="btn btn-primary btn-animated w-full justify-center mt-4 animate-fade delay-700"
+                        style="width: 100%;" :class="{ 'btn-loading': loading }">
                         Sign In to Estimate
                     </button>
 
                     <!-- Forgot Password -->
-                    <div class="text-center mt-4">
-                        <a href="{% url 'users:password_reset' %}" class="text-sm text-primary hover:underline"
+                    <div class="text-center mt-4 animate-fade delay-800">
+                        <a href="{% url 'users:password_reset' %}" class="text-sm text-primary link-animated"
                             style="color: var(--color-primary-500);">
                             Forgot password?
                         </a>
@@ -90,9 +94,9 @@
                 </form>
 
                 <!-- Register Link -->
-                <div class="mt-6 text-center pt-4 border-t border-border">
+                <div class="mt-6 text-center pt-4 border-t border-border animate-fade delay-900">
                     <span class="text-sm text-muted-foreground">New here?</span>
-                    <a href="{% url 'users:register' %}" class="text-sm font-semibold hover:underline"
+                    <a href="{% url 'users:register' %}" class="text-sm font-semibold link-animated"
                         style="color: var(--color-primary-500);">
                         Create an account
                     </a>
