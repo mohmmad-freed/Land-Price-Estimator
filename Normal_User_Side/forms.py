@@ -54,7 +54,7 @@ class ProjectForm(forms.ModelForm):
     # Helper fields for location hierarchy (not saved to Project model)
     governorate = forms.ModelChoiceField(
         queryset=Governorate.objects.filter(deleted_at__isnull=True),
-        required=False,
+        required=True,
         label="Governorate",
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_governorate'}),
         help_text="Select governorate first"
@@ -62,7 +62,7 @@ class ProjectForm(forms.ModelForm):
     
     town = forms.ModelChoiceField(
         queryset=Town.objects.filter(deleted_at__isnull=True),
-        required=False,
+        required=True,
         label="Town",
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_town'}),
         help_text="Select town after governorate"
@@ -70,7 +70,7 @@ class ProjectForm(forms.ModelForm):
     
     area = forms.ModelChoiceField(
         queryset=Area.objects.filter(deleted_at__isnull=True),
-        required=False,
+        required=True,
         label="Area",
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_area'}),
         help_text="Select area after town"
@@ -181,10 +181,12 @@ ProjectRoadFormSet = inlineformset_factory(
     Project,
     ProjectRoad,
     fields=['road_status', 'road_ownership', 'is_paved', 'width_m'],
-    extra=1,
+    
+    
     min_num=1,
     validate_min=True,
     can_delete=True,
+    max_num=3,   # Limit to 3 roads (test)
     widgets={
         'road_status': forms.Select(attrs={'class': 'form-select'}),
         'road_ownership': forms.Select(attrs={'class': 'form-select'}),

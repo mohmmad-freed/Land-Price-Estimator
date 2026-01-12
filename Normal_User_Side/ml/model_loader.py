@@ -1,16 +1,19 @@
 import joblib
-from pathlib import Path
+import os
+from django.conf import settings
 
-BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "land_price_model.joblib"
+MODEL_PATH = os.path.join(
+    settings.BASE_DIR,
+    "Normal_User_Side",
+    "ml",
+    "land_price_model.pkl"
+)
 
-model = None
-model_features = None
+_model = None
 
-def load_model():
-    global model, model_features
-    if model is None:
-        model = joblib.load(MODEL_PATH)
-        model_features = model.feature_names_in_
-    return model, model_features
+def get_model():
+    global _model
+    if _model is None:
+        _model = joblib.load(MODEL_PATH)
+    return _model
 

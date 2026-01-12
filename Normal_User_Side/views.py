@@ -7,6 +7,11 @@ from .ml.predict import predict_land_price
 from core.models import Project
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, ProjectForm, ProjectRoadFormSet
+from core.models import (
+    ProjectLandUse,
+    ProjectFacility,
+    ProjectEnvironmentalFactor
+)
 
 
 
@@ -45,18 +50,18 @@ def newProject(request):
         road_formset = ProjectRoadFormSet(request.POST)
         
         if form.is_valid() and road_formset.is_valid():
-            # Save the project but don't commit yet (need to set created_by)
+            
             project = form.save(commit=False)
             project.created_by = request.user
             
-            # Determine status based on action button clicked
+            
             action = request.POST.get('action')
             if action == 'complete':
                 project.status = 'COMPLETED'
             else:
                 project.status = 'DRAFT'
             
-            # Save the project to get an ID
+            
             project.save()
             
             # Save many-to-many relationships
@@ -64,7 +69,6 @@ def newProject(request):
             land_uses = form.cleaned_data.get('land_uses')
             if land_uses:
                 for land_use in land_uses:
-                    from core.models import ProjectLandUse
                     ProjectLandUse.objects.create(
                         project=project,
                         land_use_type=land_use
@@ -74,7 +78,6 @@ def newProject(request):
             facilities = form.cleaned_data.get('facilities')
             if facilities:
                 for facility in facilities:
-                    from core.models import ProjectFacility
                     ProjectFacility.objects.create(
                         project=project,
                         facility_type=facility
@@ -84,7 +87,6 @@ def newProject(request):
             environmental_factors = form.cleaned_data.get('environmental_factors')
             if environmental_factors:
                 for factor in environmental_factors:
-                    from core.models import ProjectEnvironmentalFactor
                     ProjectEnvironmentalFactor.objects.create(
                         project=project,
                         environmental_factor_type=factor
@@ -94,16 +96,21 @@ def newProject(request):
             road_formset.instance = project
             road_formset.save()
             
-            # Show success message
+            # Predict estimated price if action is 'complete'
             if action == 'complete':
-                messages.success(request, f'Project "{project.project_name}" has been created and marked as completed!')
+                predicted_price = predict_land_price(project, road_formset)
+                project.estimated_price = predicted_price
+                project.save(update_fields=['estimated_price'])
+                messages.success(request, f'Project "{project.project_name}" has been created and marked as completed! Estimated price: {predicted_price:.2f}')
             else:
                 messages.success(request, f'Project "{project.project_name}" has been saved as draft!')
             
             return redirect('normal_user:projects')
+        
         else:
             # Form has errors, will be displayed in template
             messages.error(request, 'Please correct the errors below.')
+    
     else:
         form = ProjectForm()
         road_formset = ProjectRoadFormSet()
