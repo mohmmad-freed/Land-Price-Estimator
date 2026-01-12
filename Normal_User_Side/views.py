@@ -4,9 +4,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 
 from .ml.predict import predict_land_price
-from .models import Project
+from core.models import Project
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, ProjectForm
+from .forms import UserForm, ProjectForm, ProjectRoadFormSet
+
 
 
 User = get_user_model()
@@ -41,43 +42,87 @@ def editProfile(request):
 def newProject(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
-        if form.is_valid():
+        road_formset = ProjectRoadFormSet(request.POST)
+        
+        if form.is_valid() and road_formset.is_valid():
+            # Save the project but don't commit yet (need to set created_by)
             project = form.save(commit=False)
-            project.user = request.user
-
-            if request.POST.get('action') == 'estimate':
-                input_data = {
-                    "governorate": project.governorate,
-                    "land_size": project.land_size,
-                    "land_type": project.land_type,
-                    "political_classification": project.political_classification,
-                    
-                }
-                try:
-                    project.estimated_price = predict_land_price(input_data)
-                    project.status = 'completed'
-                except Exception as e:
-                    messages.error(request, "Price estimation failed. Please try again later.")
-                    project.status = 'draft'
+            project.created_by = request.user
+            
+            # Determine status based on action button clicked
+            action = request.POST.get('action')
+            if action == 'complete':
+                project.status = 'COMPLETED'
             else:
-                project.status = 'draft'
-
+                project.status = 'DRAFT'
+            
+            # Save the project to get an ID
             project.save()
+            
+            # Save many-to-many relationships
+            # Land uses
+            land_uses = form.cleaned_data.get('land_uses')
+            if land_uses:
+                for land_use in land_uses:
+                    from core.models import ProjectLandUse
+                    ProjectLandUse.objects.create(
+                        project=project,
+                        land_use_type=land_use
+                    )
+            
+            # Facilities
+            facilities = form.cleaned_data.get('facilities')
+            if facilities:
+                for facility in facilities:
+                    from core.models import ProjectFacility
+                    ProjectFacility.objects.create(
+                        project=project,
+                        facility_type=facility
+                    )
+            
+            # Environmental factors
+            environmental_factors = form.cleaned_data.get('environmental_factors')
+            if environmental_factors:
+                for factor in environmental_factors:
+                    from core.models import ProjectEnvironmentalFactor
+                    ProjectEnvironmentalFactor.objects.create(
+                        project=project,
+                        environmental_factor_type=factor
+                    )
+            
+            # Save roads formset
+            road_formset.instance = project
+            road_formset.save()
+            
+            # Show success message
+            if action == 'complete':
+                messages.success(request, f'Project "{project.project_name}" has been created and marked as completed!')
+            else:
+                messages.success(request, f'Project "{project.project_name}" has been saved as draft!')
+            
             return redirect('normal_user:projects')
-
+        else:
+            # Form has errors, will be displayed in template
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = ProjectForm()
+        road_formset = ProjectRoadFormSet()
 
-    return render(request, 'Normal_User_Side/new_project.html', {'form': form})
+    context = {
+        'form': form,
+        'road_formset': road_formset,
+    }
+    return render(request, 'Normal_User_Side/new_project.html', context)
 
 
 def viewProjects(request):
-     projects = Project.objects.filter(user=request.user).order_by('-date_created')
+     projects = Project.objects.filter(created_by=request.user)
       # Get filter parameters from GET request
      land_type = request.GET.get('land_type')
      political_type = request.GET.get('political_type')
      status = request.GET.get('status')
      search_query = request.GET.get('search')
+     sort_by = request.GET.get('sort', '-created_at')
 
     # Apply filters in the view
      if land_type:
@@ -87,12 +132,19 @@ def viewProjects(request):
      if status:
         projects = projects.filter(status=status)
      if search_query:
-        projects = projects.filter(name__icontains=search_query)
+        projects = projects.filter(project_name__icontains=search_query)
+     
+     # Apply sorting
+     if sort_by in ['created_at', '-created_at']:
+         projects = projects.order_by(sort_by)
+     else:
+         projects = projects.order_by('-created_at')
+
      context = {
         'projects': projects,
-        'land_types': Project.LAND_TYPES,
-        'political_types': Project.POLITICAL,
-        'statuses': Project.STATUS_CHOICES,
+        'land_types': Project.LandType.choices,
+        'political_types': Project.PoliticalClassification.choices,
+        'statuses': Project.Status.choices,
     }
      return render(request, 'Normal_User_Side/projects.html',context)
 

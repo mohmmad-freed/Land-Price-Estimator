@@ -18,7 +18,7 @@
     <!-- Page Header Card -->
     <div class="container">
         <div class="card card-glass"
-            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 900px; margin: 0 auto;">
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 1000px; margin: 0 auto;">
             <!-- Back Button -->
             <a href="{% url 'normal_user:dashboard' %}" class="inline-flex items-center gap-2 mb-4"
                 style="color: var(--color-primary-500); text-decoration: none; font-weight: 500; font-size: 0.875rem;">
@@ -39,7 +39,7 @@
 </div>
 
 <!-- Form Section -->
-<div class="container" style="max-width: 900px; margin: 0 auto;">
+<div class="container" style="max-width: 1000px; margin: 0 auto;">
     <form method="POST" action="">
         {% csrf_token %}
 
@@ -70,11 +70,12 @@
                         <line x1="16" y1="17" x2="8" y2="17" />
                         <polyline points="10 9 9 9 8 9" />
                     </svg>
-                    Project Name *
+                    {{ form.project_name.label }} *
                 </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.name.errors }}</p>
+                {{ form.project_name }}
+                {% if form.project_name.errors %}
+                <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.project_name.errors
+                    }}</p>
                 {% endif %}
             </div>
 
@@ -89,13 +90,13 @@
                         <line x1="16" y1="13" x2="8" y2="13" />
                         <line x1="16" y1="17" x2="8" y2="17" />
                     </svg>
-                    Description (Optional)
+                    {{ form.description.label }}
                 </label>
                 {{ form.description }}
             </div>
         </div>
 
-        <!-- Land Information Card -->
+        <!-- Location & Parcel Information Card -->
         <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
             <h2 class="text-xl font-semibold mb-6"
                 style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
@@ -105,7 +106,7 @@
                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                     <circle cx="12" cy="10" r="3" />
                 </svg>
-                Land Information
+                Location & Parcel Information
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -117,56 +118,403 @@
                             style="color: var(--color-primary-500);">
                             <polygon points="3 11 22 2 13 21 11 13 3 11" />
                         </svg>
-                        Governorate *
+                        {{ form.governorate.label }}
                     </label>
                     {{ form.governorate }}
+                    <p style="color: var(--color-text-muted); font-size: 0.75rem; margin-top: 4px;">
+                        {{ form.governorate.help_text }}
+                    </p>
+                    {% if form.governorate.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.governorate.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Town -->
+                <div class="form-group">
+                    <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-500);">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                        {{ form.town.label }}
+                    </label>
+                    {{ form.town }}
+                    <p style="color: var(--color-text-muted); font-size: 0.75rem; margin-top: 4px;">
+                        {{ form.town.help_text }}
+                    </p>
+                    {% if form.town.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.town.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Area -->
+                <div class="form-group">
+                    <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-500);">
+                            <circle cx="12" cy="10" r="3" />
+                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z" />
+                        </svg>
+                        {{ form.area.label }}
+                    </label>
+                    {{ form.area }}
+                    <p style="color: var(--color-text-muted); font-size: 0.75rem; margin-top: 4px;">
+                        {{ form.area.help_text }}
+                    </p>
+                    {% if form.area.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.area.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Neighborhood -->
+                <div class="form-group">
+                    <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-500);">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <rect x="7" y="10" width="3" height="4" />
+                            <rect x="14" y="10" width="3" height="4" />
+                        </svg>
+                        {{ form.neighborhood.label }} *
+                    </label>
+                    {{ form.neighborhood }}
+                    {% if form.neighborhood.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.neighborhood.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Parcel Identification (full width below location) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" style="margin-top: var(--spacing-6);">
+
+
+                <!-- Neighborhood Number -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.neighborhood_no.label }} *</label>
+                    {{ form.neighborhood_no }}
+                    {% if form.neighborhood_no.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.neighborhood_no.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Parcel Number -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.parcel_no.label }} *</label>
+                    {{ form.parcel_no }}
+                    {% if form.parcel_no.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.parcel_no.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Land Attributes Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h2 class="text-xl font-semibold mb-6"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+                Land Attributes
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Land Area -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.area_m2.label }} *</label>
+                    {{ form.area_m2 }}
+                    {% if form.area_m2.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.area_m2.errors
+                        }}</p>
+                    {% endif %}
                 </div>
 
                 <!-- Land Type -->
                 <div class="form-group">
-                    <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            style="color: var(--color-primary-500);">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                            <line x1="9" y1="3" x2="9" y2="21" />
-                        </svg>
-                        Land Type *
-                    </label>
+                    <label class="form-label">{{ form.land_type.label }} *</label>
                     {{ form.land_type }}
-                </div>
-
-                <!-- Land Size -->
-                <div class="form-group">
-                    <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            style="color: var(--color-primary-500);">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                        </svg>
-                        Land Size (sq. meters) *
-                    </label>
-                    {{ form.land_size }}
-                    {% if form.land_size.errors %}
+                    {% if form.land_type.errors %}
                     <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
-                        form.land_size.errors }}</p>
+                        form.land_type.errors }}</p>
                     {% endif %}
                 </div>
 
                 <!-- Political Classification -->
                 <div class="form-group">
-                    <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            style="color: var(--color-primary-500);">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                            <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        Political Classification *
-                    </label>
+                    <label class="form-label">{{ form.political_classification.label }} *</label>
                     {{ form.political_classification }}
+                    {% if form.political_classification.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.political_classification.errors }}</p>
+                    {% endif %}
                 </div>
+
+                <!-- Slope -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.slope.label }} *</label>
+                    {{ form.slope }}
+                    {% if form.slope.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.slope.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- View Quality -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.view_quality.label }} *</label>
+                    {{ form.view_quality }}
+                    {% if form.view_quality.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.view_quality.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Parcel Shape -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.parcel_shape.label }} *</label>
+                    {{ form.parcel_shape }}
+                    {% if form.parcel_shape.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.parcel_shape.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Utilities Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h2 class="text-xl font-semibold mb-6"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                Utilities
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Electricity -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.electricity.label }} *</label>
+                    {{ form.electricity }}
+                    {% if form.electricity.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                        form.electricity.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Water -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.water.label }} *</label>
+                    {{ form.water }}
+                    {% if form.water.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.water.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Sewage -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.sewage.label }} *</label>
+                    {{ form.sewage }}
+                    {% if form.sewage.errors %}
+                    <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{ form.sewage.errors
+                        }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Land Uses Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h3 class="text-lg font-semibold mb-4"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                    <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                </svg>
+                Intended Land Uses *
+            </h3>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-4);">
+                Select one or more intended uses for this land
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {% for choice in form.land_uses %}
+                <div
+                    style="display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-3); background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+                    {{ choice.tag }}
+                    <label for="{{ choice.id_for_label }}"
+                        style="cursor: pointer; color: var(--color-text-main); font-size: 0.9375rem;">
+                        {{ choice.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.land_uses.errors %}
+            <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: var(--spacing-2);">{{
+                form.land_uses.errors }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Facilities Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h3 class="text-lg font-semibold mb-4"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Nearby Facilities
+            </h3>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-4);">
+                Select all facilities near this land
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {% for choice in form.facilities %}
+                <div
+                    style="display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-3); background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+                    {{ choice.tag }}
+                    <label for="{{ choice.id_for_label }}"
+                        style="cursor: pointer; color: var(--color-text-main); font-size: 0.9375rem;">
+                        {{ choice.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Environmental Factors Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h3 class="text-lg font-semibold mb-4"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <path d="M17 18a5 5 0 0 0-10 0" />
+                    <line x1="12" y1="9" x2="12" y2="2" />
+                    <line x1="4.22" y1="10.22" x2="5.64" y2="11.64" />
+                    <line x1="1" y1="18" x2="3" y2="18" />
+                    <line x1="21" y1="18" x2="23" y2="18" />
+                    <line x1="18.36" y1="11.64" x2="19.78" y2="10.22" />
+                    <line x1="23" y1="22" x2="1" y2="22" />
+                    <polyline points="16 5 12 9 8 5" />
+                </svg>
+                Environmental Factors
+            </h3>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-4);">
+                Select all applicable environmental factors
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for choice in form.environmental_factors %}
+                <div
+                    style="display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-3); background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+                    {{ choice.tag }}
+                    <label for="{{ choice.id_for_label }}"
+                        style="cursor: pointer; color: var(--color-text-main); font-size: 0.9375rem;">
+                        {{ choice.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Roads Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h3 class="text-lg font-semibold mb-4"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                Road Access *
+            </h3>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-4);">
+                Add at least one road access to the land
+            </p>
+
+            {{ road_formset.management_form }}
+            <div id="road-formset">
+                {% for road_form in road_formset %}
+                <div class="road-form-item"
+                    style="padding: var(--spacing-4); background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin-bottom: var(--spacing-4);">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Road Status *</label>
+                            {{ road_form.road_status }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Road Ownership *</label>
+                            {{ road_form.road_ownership }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Road Width (m) *</label>
+                            {{ road_form.width_m }}
+                        </div>
+                        <div class="form-group"
+                            style="display: flex; align-items: center; gap: var(--spacing-2); padding-top: var(--spacing-6);">
+                            {{ road_form.is_paved }}
+                            <label for="{{ road_form.is_paved.id_for_label }}" style="cursor: pointer;">Is
+                                Paved?</label>
+                        </div>
+                    </div>
+                    {% if road_formset.can_delete %}
+                    <div style="margin-top: var(--spacing-2);">
+                        {{ road_form.DELETE }}
+                        <label for="{{ road_form.DELETE.id_for_label }}"
+                            style="color: var(--color-danger); cursor: pointer; font-size: 0.875rem;">Delete this
+                            road</label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% if road_formset.non_form_errors %}
+            <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: var(--spacing-2);">{{
+                road_formset.non_form_errors }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Ownership & Pricing Card -->
+        <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+            <h2 class="text-xl font-semibold mb-6"
+                style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500);">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                Ownership & Pricing
+            </h2>
+
+            <!-- Ownership Document Type -->
+            <div class="form-group">
+                <label class="form-label">{{ form.ownership_document_type.label }} *</label>
+                {{ form.ownership_document_type }}
+                {% if form.ownership_document_type.errors %}
+                <p style="color: var(--color-danger); font-size: 0.875rem; margin-top: 4px;">{{
+                    form.ownership_document_type.errors }}</p>
+                {% endif %}
             </div>
         </div>
 
@@ -181,17 +529,16 @@
                         <polyline points="17 21 17 13 7 13 7 21" />
                         <polyline points="7 3 7 8 15 8" />
                     </svg>
-                    Save Project
+                    Save as Draft
                 </button>
 
-                <button type="submit" name="action" value="estimate" class="btn btn-primary"
+                <button type="submit" name="action" value="complete" class="btn btn-primary"
                     style="flex: 1; min-width: 200px; display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-2);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="1" x2="12" y2="23" />
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        <polyline points="20 6 9 17 4 12" />
                     </svg>
-                    Estimate Price
+                    Save as Completed
                 </button>
             </div>
         </div>
