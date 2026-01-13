@@ -80,3 +80,16 @@ INTENDED_USE_CHOICES = [
     ("industrial", "Industrial"),
     ("mixed", "Mixed"),
 ]
+
+PARCEL_SHAPE_CHOICES = [
+    ("SQUARE", "Square"),
+    ("RECTANGLE", "Rectangle"),
+    ("IRREGULAR", "Irregular"),
+]
+
+ROAD_STATUS_CHOICES = [
+    ("EXISTING", "Existing"),
+    ("PROPOSED", "Proposed"),
+    ("PUBLIC", "Public"),
+    ("FALSE", "None"),
+]

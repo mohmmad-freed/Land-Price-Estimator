@@ -18,7 +18,11 @@ from core.models import (
 User = get_user_model()
 
 def dashboard(request):
-    return render(request, 'Normal_User_Side/dashboard.html')
+    completed_count = request.user.projects.filter(status='completed').count()
+    draft_count = request.user.projects.filter(status='draft').count()
+    context = { 'completed_count': completed_count, 'draft_count': draft_count}
+        
+    return render(request, 'Normal_User_Side/dashboard.html', context)
 
 
 @login_required(login_url='users:login')

@@ -11,6 +11,8 @@ from .constants import (
     NEIGHBORHOOD_CHOICES,
     SLOPE_CHOICES,
     INTENDED_USE_CHOICES,
+    PARCEL_SHAPE_CHOICES,
+    ROAD_STATUS_CHOICES
 )
 
 
@@ -56,9 +58,10 @@ class Project(models.Model):
 
     # Original land fields
     governorate = models.CharField(max_length=50, choices=GOVERNORATES)
-    land_size = models.PositiveIntegerField()
+    area_m2 = models.PositiveIntegerField(null=True, blank=True)
     land_type = models.CharField(max_length=50, choices=LAND_TYPES)
     political_classification = models.CharField(max_length=50, choices=POLITICAL_CLASSIFICATIONS)
+    width_m = models.FloatField(null=True, blank=True)
 
     # NEW FIELDS - All nullable/blank to avoid breaking existing projects
     # Validation enforced in form layer
@@ -93,6 +96,26 @@ class Project(models.Model):
         null=True,
         help_text="Degree of land slope"
     )
+
+    parcel_shape = models.CharField(
+    max_length=20,
+    choices=PARCEL_SHAPE_CHOICES,
+    null=True,
+    blank=True
+
+    )
+    
+    facility_type_ml = models.CharField(
+    max_length=30,
+    null=True,
+    blank=True
+
+    )
+
+    paved_road_1 = models.CharField(max_length=20, choices=ROAD_STATUS_CHOICES, null=True, blank=True)
+    paved_road_2 = models.CharField(max_length=20, choices=ROAD_STATUS_CHOICES, null=True, blank=True)
+    paved_road_3 = models.CharField(max_length=20, choices=ROAD_STATUS_CHOICES, null=True, blank=True)
+
 
     # Infrastructure availability (boolean fields)
     has_electricity = models.BooleanField(default=False, help_text="Electricity available")

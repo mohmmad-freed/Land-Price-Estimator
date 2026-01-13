@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 import re
 from django.contrib.auth.hashers import check_password
 from django.forms import inlineformset_factory
-
+from .models import Project as UserProject 
 from core.models import (
     Project, Governorate, Town, Area, Neighborhood,
     LandUseType, FacilityType, EnvironmentalFactorType, ProjectRoad

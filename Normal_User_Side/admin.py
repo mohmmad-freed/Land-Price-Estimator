@@ -19,7 +19,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'user',
         'governorate',
         'town',
-        'land_size',
+        "area_m2",
         'land_type',
         'slope',
         'status',
