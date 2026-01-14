@@ -343,7 +343,7 @@
                                 {% if project.estimated_price %}
                                 <span class="text-sm text-muted-foreground">Estimated Value</span>
                                 <div class="text-lg font-bold" style="color: var(--color-primary-500);">
-                                    ${{ project.estimated_price|floatformat:0|intcomma }}
+                                    {{ project.estimated_price|floatformat:0|intcomma }}k JOD 
                                 </div>
                                 {% else %}
                                 <span class="text-sm text-muted-foreground">No estimation yet</span>

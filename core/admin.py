@@ -1,6 +1,6 @@
 from django.contrib import admin
 from core.models import (
-    User, Governorate, Town, Area, Neighborhood,
+    Governorate, Town, Area, Neighborhood,
     LandUseType, FacilityType, EnvironmentalFactorType,
     Project, ProjectLandUse, ProjectFacility, ProjectEnvironmentalFactor,
     ProjectRoad, MLModel, Setting, Valuation
