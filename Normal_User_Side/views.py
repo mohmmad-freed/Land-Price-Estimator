@@ -104,7 +104,7 @@ def newProject(request):
             if action == 'complete':
                 predicted_price = predict_land_price(project, road_formset)
                 project.estimated_price = predicted_price
-                project.save(update_fields=['estimated_price'])
+                project.save(update_fields=['estimated_price', 'status'])
                 messages.success(request, f'Project "{project.project_name}" has been created and marked as completed! Estimated price: {predicted_price:.2f}')
             else:
                 messages.success(request, f'Project "{project.project_name}" has been saved as draft!')

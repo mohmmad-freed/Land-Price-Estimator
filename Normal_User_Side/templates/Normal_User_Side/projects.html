@@ -170,7 +170,7 @@
             style="padding: 0; overflow: hidden; position: relative;">
             <!-- Status Badge - Floating -->
             <div style="position: absolute; top: var(--spacing-4); right: var(--spacing-4); z-index: 10;">
-                {% if project.status == 'completed' %}
+                {% if project.status == 'COMPLETED' %}
                 <div
                     style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600)); color: white; font-size: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
@@ -198,42 +198,109 @@
             <!-- Card Content -->
             <div style="padding: var(--spacing-6);">
                 <!-- Project Icon & Title -->
-                <div class="flex items-start gap-4 mb-4">
-
-                    {# Badge now uses CSS classes, no inline ifs in style #}
-                    <div
-                        class="land-badge land-badge--{% if project.land_type %}{{ project.land_type }}{% else %}other{% endif %}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            aria-hidden="true">
-
-                            {% if project.land_type == 'commercial' %}
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-
-                            {% elif project.land_type == 'residential' %}
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-
-                            {% elif project.land_type == 'industrial' %}
-                            {# simple factory icon #}
-                            <path d="M3 21V9l6 3V9l6 3V9l6 3v9H3z" />
-                            <path d="M7 21v-8" />
-                            <path d="M11 21v-6" />
-                            <path d="M15 21v-4" />
-
-                            {% else %}
-                            <path
-                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                            <line x1="12" y1="22.08" x2="12" y2="12" />
-                            {% endif %}
-                        </svg>
-                    </div>
+<div class="flex items-start gap-4 mb-4">
+    {# Badge now uses CSS classes, no inline ifs in style #}
+    {% with use_count=project.projectlanduse_set.count %}
+    {% if use_count > 1 %}
+        {# Multiple land uses - show mixed use icon #}
+        <div class="land-badge land-badge--mixed">
+            <div
+                style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--color-secondary-200), var(--color-secondary-400)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: var(--shadow-md);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                {# Grid/layers icon for mixed use #}
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+            </svg>
+            </div>
+        </div>
+    {% elif use_count == 1 %}
+        {# Single land use - show specific icon #}
+        {% with first_use=project.projectlanduse_set.first %}
+        <div class="land-badge land-badge--{{ first_use.land_use_type.name|lower }}">
+            <div
+                style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--color-secondary-200), var(--color-secondary-400)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: var(--shadow-md);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+        
+                
+                {% if first_use.land_use_type.name == 'residential' or first_use.land_use_type.name == 'Residential' %}
+                    {# Home icon #}
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                
+                {% elif first_use.land_use_type.name == 'commercial' or first_use.land_use_type.name == 'Commercial' %}
+                    {# Building/store icon #}
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                
+                {% elif first_use.land_use_type.name == 'industrial' or first_use.land_use_type.name == 'Industrial' %}
+                    {# Factory icon #}
+                    <path d="M3 21V9l6 3V9l6 3V9l6 3v9H3z" />
+                    <path d="M7 21v-8" />
+                    <path d="M11 21v-6" />
+                    <path d="M15 21v-4" />
+                
+                {% elif first_use.land_use_type.name == 'agricultural' or first_use.land_use_type.name == 'Agricultural' %}
+                    {# Wheat/farm icon #}
+                    <path d="M2 22h20" />
+                    <path d="M3.77 10.77 2 9l2-4.5 1.26.55C7.5 6.5 10 9 10 12v10" />
+                    <path d="M7.5 12h9" />
+                    <path d="M16.77 10.77 18 9l-2-4.5-1.26.55C12.5 6.5 10 9 10 12v10" />
+                
+                {% elif first_use.land_use_type.name == 'recreational' or first_use.land_use_type.name == 'Recreational' %}
+                    {# Park/tree icon #}
+                    <path d="M12 13v8" />
+                    <path d="M12 3a3 3 0 0 0-3 3c0 1.5.5 2.5 1.5 3.5A4 4 0 0 0 8 13a4 4 0 0 0 8 0 4 4 0 0 0-2.5-3.5C14.5 8.5 15 7.5 15 6a3 3 0 0 0-3-3Z" />
+                
+                {% elif first_use.land_use_type.name == 'institutional' or first_use.land_use_type.name == 'Institutional' %}
+                    {# Institution/government building icon #}
+                    <path d="M3 21h18" />
+                    <path d="M5 21V7l8-4v18" />
+                    <path d="M19 21V11l-6-4" />
+                    <path d="M9 9v.01" />
+                    <path d="M9 12v.01" />
+                    <path d="M9 15v.01" />
+                    <path d="M9 18v.01" />
+                
+                {% elif first_use.land_use_type.name == 'mixed' or first_use.land_use_type.name == 'Mixed' %}
+                    {# Mixed use building icon #}
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                
+                {% else %}
+                    {# Default/other icon #}
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                {% endif %}
+            </svg>
+            </div>
+        </div>
+        {% endwith %}
+    {% else %}
+        {# No land use specified - show default icon #}
+        <div class="land-badge land-badge--other">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+        </div>
+    {% endif %}
+    {% endwith %}
 
                     <div style="flex: 1; padding-right: 80px;">
                         <h3 class="text-lg font-bold mb-1" style="color: var(--color-text-main); line-height: 1.3;">
-                            {{ project.name }}
+                            {{ project.project_name }}
                         </h3>
                         <p class="text-sm text-muted-foreground flex items-center">
                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -242,8 +309,7 @@
                                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
                                 </path>
                             </svg>
-                            {{ project.get_governorate_display }}{% if project.town %}, {{ project.get_town_display }}{%
-                            endif %}
+                            {{ project.get_governorate_display }}{% if project.town %}, {{ project.get_town_display }}{% endif %}
                         </p>
                     </div>
                 </div>
@@ -264,7 +330,7 @@
                         <div>
                             <span class="text-muted-foreground">Size:</span>
                             <span style="color: var(--color-text-main); font-weight: 500;">
-                                {{ project.land_size }} m²
+                                {{ project.area_m2 }} m²
                             </span>
                         </div>
                         {% if project.slope %}
@@ -284,15 +350,22 @@
                     </div>
 
                     <!-- Intended Uses -->
-                    {% if project.intended_uses.all %}
+                    {% if project.projectlanduse_set.exists %}
                     <div style="margin-top: var(--spacing-2);">
                         <span class="text-muted-foreground"
-                            style="font-size: 0.75rem; display: block; margin-bottom: 4px;">Intended Use:</span>
+                            style="font-size: 0.75rem; display: block; margin-bottom: 4px;">
+                            Intended Use:
+                        </span>
+
                         <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                            {% for use in project.intended_uses.all %}
+                            {% for plu in project.projectlanduse_set.all %}
                             <span
-                                style="display: inline-block; padding: 2px 8px; background: var(--color-primary-100); color: var(--color-primary-600); border-radius: var(--radius-md); font-size: 0.75rem; font-weight: 500;">
-                                {{ use.get_name_display }}
+                                style="display: inline-block; padding: 2px 8px;
+                                       background: var(--color-primary-100);
+                                       color: var(--color-primary-600);
+                                       border-radius: var(--radius-md);
+                                       font-size: 0.75rem; font-weight: 500;">
+                                {{ plu.land_use_type.label }}
                             </span>
                             {% endfor %}
                         </div>
@@ -300,36 +373,24 @@
                     {% endif %}
 
                     <!-- Infrastructure Icons -->
-                    {% if project.has_electricity or project.has_water or project.has_sewage or project.has_paved_road
-                    or project.has_internet %}
+                    {% if project.has_electricity or project.has_water or project.has_sewage %}
                     <div style="margin-top: var(--spacing-2);">
                         <span class="text-muted-foreground"
-                            style="font-size: 0.75rem; display: block; margin-bottom: 4px;">Infrastructure:</span>
+                              style="font-size: 0.75rem; display: block; margin-bottom: 4px;">
+                            Infrastructure:
+                        </span>
+
                         <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                             {% if project.has_electricity %}
-                            <span
-                                style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.7rem;"
-                                title="Electricity">⚡</span>
+                                <span title="Electricity">⚡</span>
                             {% endif %}
+
                             {% if project.has_water %}
-                            <span
-                                style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.7rem;"
-                                title="Water">💧</span>
+                                <span title="Water">💧</span>
                             {% endif %}
+
                             {% if project.has_sewage %}
-                            <span
-                                style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.7rem;"
-                                title="Sewage">🚰</span>
-                            {% endif %}
-                            {% if project.has_paved_road %}
-                            <span
-                                style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.7rem;"
-                                title="Paved Road">🛣️</span>
-                            {% endif %}
-                            {% if project.has_internet %}
-                            <span
-                                style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.7rem;"
-                                title="Internet">📶</span>
+                                <span title="Sewage">🚰</span>
                             {% endif %}
                         </div>
                     </div>
@@ -356,7 +417,6 @@
                                         </path>
                                     </svg>
                                     {{ project.created_at|date:"Y-m-d" }}
-
                                 </span>
                             </div>
                             <div>
