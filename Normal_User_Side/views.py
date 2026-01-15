@@ -25,8 +25,12 @@ def dashboard(request):
         .aggregate(total=Sum('estimated_price'))
         ['total'] or 0
     )
-    context = { 'completed_count': completed_count, 'draft_count': draft_count, 'total_estimated_price': total_estimated_price}
-        
+    recent_projects = (
+        request.user.projects
+        .order_by('-created_at')[:3]
+    )
+
+    context = { 'completed_count': completed_count, 'draft_count': draft_count, 'total_estimated_price': total_estimated_price, 'recent_projects': recent_projects}
     return render(request, 'Normal_User_Side/dashboard.html', context)
 
 
@@ -110,7 +114,7 @@ def newProject(request):
                 predicted_price = predict_land_price(project, road_formset)
                 project.estimated_price = predicted_price
                 project.save(update_fields=['estimated_price', 'status'])
-                messages.success(request, f'Project "{project.project_name}" has been created and marked as completed! Estimated price: {predicted_price:.2f}')
+                messages.success(request, f'Project "{project.project_name}" has been created and marked as completed! Estimated price: {predicted_price:.0f} k JOD')
             else:
                 messages.success(request, f'Project "{project.project_name}" has been saved as draft!')
             

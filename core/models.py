@@ -287,7 +287,7 @@ class Project(models.Model):
 
 
 class ProjectLandUse(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, related_name='land_uses')
     land_use_type = models.ForeignKey(LandUseType, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)

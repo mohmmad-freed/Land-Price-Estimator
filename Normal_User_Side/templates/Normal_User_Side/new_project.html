@@ -37,7 +37,16 @@
         </div>
     </div>
 </div>
-
+                    <!--  Message if exists -->
+                      <div class="container mb-6">
+                    {% if messages %}
+                    <div>
+                        {% for message in messages %}
+                        <p class="error-message text-center">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    </div>
 <!-- Form Section -->
 <div class="container" style="max-width: 1000px; margin: 0 auto;">
     <form method="POST" action="">
