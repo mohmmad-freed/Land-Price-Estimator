@@ -2,7 +2,7 @@ from django.contrib import messages
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-
+from django.db.models import Sum
 from .ml.predict import predict_land_price
 from core.models import Project
 from django.contrib.auth.decorators import login_required
@@ -18,9 +18,14 @@ from core.models import (
 User = get_user_model()
 
 def dashboard(request):
-    completed_count = request.user.projects.filter(status='completed').count()
-    draft_count = request.user.projects.filter(status='draft').count()
-    context = { 'completed_count': completed_count, 'draft_count': draft_count}
+    completed_count = request.user.projects.filter(status='COMPLETED').count()
+    draft_count = request.user.projects.filter(status='DRAFT').count()
+    total_estimated_price = (
+        request.user.projects
+        .aggregate(total=Sum('estimated_price'))
+        ['total'] or 0
+    )
+    context = { 'completed_count': completed_count, 'draft_count': draft_count, 'total_estimated_price': total_estimated_price}
         
     return render(request, 'Normal_User_Side/dashboard.html', context)
 
