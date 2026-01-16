@@ -10,6 +10,8 @@ urlpatterns = [
     path('edit-profile/', views.editProfile, name='edit-profile'),
     path('new-project/', views.newProject, name='new-project'),
     path('projects/', views.viewProjects, name='projects'),
-    path('settings/', views.settings, name='settings'),
+    path('normal/new-project/<int:project_id>/', views.newProject, name='new-project'),
+   
+
    
 ]

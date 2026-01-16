@@ -353,7 +353,7 @@ class ProjectRoad(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     road_status = models.CharField(max_length=20, choices=RoadStatus.choices)
     road_ownership = models.CharField(max_length=20, choices=RoadOwnership.choices)
-    is_paved = models.BooleanField(null=True, blank=True)
+    is_paved = models.BooleanField(default=False)
     width_m = models.DecimalField(max_digits=6, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)

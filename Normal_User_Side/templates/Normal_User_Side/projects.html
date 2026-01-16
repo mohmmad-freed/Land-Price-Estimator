@@ -410,9 +410,10 @@
                                 </span>
                             </div>
                             <div>
-                                <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
-                                    View Details
-                                </button>
+                                <a href="{% url 'normal_user:new-project' project.id %}" class="btn btn-primary"
+                            style="padding: 8px 16px; font-size: 0.875rem;">
+                            Edit / View Details
+                        </a>
                             </div>
                         </div>
                     </div>

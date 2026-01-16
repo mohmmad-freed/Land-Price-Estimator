@@ -1,22 +1,19 @@
 from django.contrib import messages
-
-from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from .ml.predict import predict_land_price
-from core.models import Project
+from core.models import Project, ProjectRoad, ProjectLandUse, ProjectFacility, ProjectEnvironmentalFactor
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, ProjectForm, ProjectRoadFormSet
-from core.models import (
-    ProjectLandUse,
-    ProjectFacility,
-    ProjectEnvironmentalFactor
-)
+
 
 
 
 User = get_user_model()
 
+@login_required
 def dashboard(request):
     completed_count = request.user.projects.filter(status='COMPLETED').count()
     draft_count = request.user.projects.filter(status='DRAFT').count()
@@ -56,85 +53,116 @@ def editProfile(request):
 
     return render(request, 'Normal_User_Side/edit_profile.html', context)
 
+@login_required
+def newProject(request, project_id=None):
+    """
+    Create a new project or edit an existing one.
+    """
+    if project_id:
+        project = get_object_or_404(Project, pk=project_id)
+        is_edit = True
+    else:
+        project = None
+        is_edit = False
 
-def newProject(request):
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
-        road_formset = ProjectRoadFormSet(request.POST)
-        
+        form = ProjectForm(request.POST, instance=project)
+        road_formset = ProjectRoadFormSet(request.POST, instance=project)
+        print(form.errors)
+        print(road_formset.errors)
+        print(road_formset.non_form_errors())
+
+
         if form.is_valid() and road_formset.is_valid():
-            
             project = form.save(commit=False)
-            project.created_by = request.user
-            
-            
+            if not is_edit:
+                project.created_by = request.user
+
             action = request.POST.get('action')
+
             if action == 'complete':
                 project.status = 'COMPLETED'
             else:
                 project.status = 'DRAFT'
-            
-            
+                project.estimated_price = None  # clear price if draft
+
             project.save()
-            
+
+            # Clear existing related objects if editing
+            if is_edit:
+                ProjectLandUse.objects.filter(project=project).delete()
+                ProjectFacility.objects.filter(project=project).delete()
+                ProjectEnvironmentalFactor.objects.filter(project=project).delete()
+
             # Save many-to-many relationships
-            # Land uses
-            land_uses = form.cleaned_data.get('land_uses')
-            if land_uses:
-                for land_use in land_uses:
-                    ProjectLandUse.objects.create(
-                        project=project,
-                        land_use_type=land_use
-                    )
-            
-            # Facilities
-            facilities = form.cleaned_data.get('facilities')
-            if facilities:
-                for facility in facilities:
-                    ProjectFacility.objects.create(
-                        project=project,
-                        facility_type=facility
-                    )
-            
-            # Environmental factors
-            environmental_factors = form.cleaned_data.get('environmental_factors')
-            if environmental_factors:
-                for factor in environmental_factors:
-                    ProjectEnvironmentalFactor.objects.create(
-                        project=project,
-                        environmental_factor_type=factor
-                    )
-            
+            for land_use in form.cleaned_data.get('land_uses', []):
+                ProjectLandUse.objects.create(project=project, land_use_type=land_use)
+
+            for facility in form.cleaned_data.get('facilities', []):
+                ProjectFacility.objects.create(project=project, facility_type=facility)
+
+            for factor in form.cleaned_data.get('environmental_factors', []):
+                ProjectEnvironmentalFactor.objects.create(
+                    project=project,
+                    environmental_factor_type=factor
+                )
+
             # Save roads formset
             road_formset.instance = project
             road_formset.save()
-            
-            # Predict estimated price if action is 'complete'
+
+            # Predict estimated price if completed
             if action == 'complete':
                 predicted_price = predict_land_price(project, road_formset)
                 project.estimated_price = predicted_price
                 project.save(update_fields=['estimated_price', 'status'])
-                messages.success(request, f'Project "{project.project_name}" has been created and marked as completed! Estimated price: {predicted_price:.0f} k JOD')
+                messages.success(
+                    request,
+                    f'Project "{project.project_name}" has been saved and marked as completed! Estimated price: {predicted_price:.0f} k JOD'
+                )
             else:
-                messages.success(request, f'Project "{project.project_name}" has been saved as draft!')
-            
+                project.save(update_fields=['status'])
+                messages.success(
+                    request,
+                    f'Project "{project.project_name}" has been saved as draft!'
+                )
+
             return redirect('normal_user:projects')
-        
         else:
-            # Form has errors, will be displayed in template
             messages.error(request, 'Please correct the errors below.')
-    
+
     else:
-        form = ProjectForm()
-        road_formset = ProjectRoadFormSet()
+        # GET request
+        initial = {}
+        if project:
+            # Pre-fill multi-select fields for editing
+            initial = {
+                'land_uses': project.land_uses.filter(deleted_at__isnull=True)
+                               .values_list('land_use_type', flat=True),
+                'facilities': project.projectfacility_set.filter(deleted_at__isnull=True)
+                               .values_list('facility_type', flat=True),
+                'environmental_factors': project.projectenvironmentalfactor_set.filter(deleted_at__isnull=True)
+                               .values_list('environmental_factor_type', flat=True),
+            }
+
+        form = ProjectForm(instance=project, initial=initial)
+
+        road_formset = ProjectRoadFormSet(
+            instance=project,
+            queryset=ProjectRoad.objects.filter(project=project, deleted_at__isnull=True) if project else ProjectRoad.objects.none()
+        )
 
     context = {
         'form': form,
         'road_formset': road_formset,
+        'is_edit': is_edit,
+        'project': project,
     }
+
     return render(request, 'Normal_User_Side/new_project.html', context)
 
 
+@login_required
 def viewProjects(request):
      projects = Project.objects.filter(created_by=request.user)
       # Get filter parameters from GET request
@@ -169,5 +197,4 @@ def viewProjects(request):
      return render(request, 'Normal_User_Side/projects.html',context)
 
 
-def settings(request):
-     return render(request, 'Normal_User_Side/settings.html')
+
