@@ -1,0 +1,149 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Upload Model - Data Scientist Portal{% endblock %}
+
+{% block content %}
+
+<!-- Error Messages -->
+{% if form.errors %}
+<div class="container mb-4" style="max-width: 700px; margin: 0 auto;">
+    <div class="p-4 rounded-lg"
+        style="background: rgba(239, 68, 68, 0.1); border: 1px solid var(--color-danger); color: var(--color-danger);">
+        <p class="font-semibold mb-2">Please correct the following errors:</p>
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div>• {{ field.label }}: {{ error }}</div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Page Header Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 700px; margin: 0 auto;">
+            <div class="text-center">
+                <span style="font-size: 2rem;">📤</span>
+                <h1 class="text-3xl font-bold mb-2"
+                    style="color: var(--color-text-main); margin-top: var(--spacing-2);">Upload New Model</h1>
+                <p class="text-muted-foreground">Upload a trained ML model for land price predictions</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Form -->
+<div class="container" style="max-width: 700px; margin: 0 auto;">
+    <div class="card card-glass" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+        <h2 class="text-xl font-semibold mb-6" style="color: var(--color-text-main);">Model Information</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Name Field -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <path
+                            d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                    </svg>
+                    Model Name *
+                </label>
+                <input type="text" name="name" class="form-input" value="{{ form.name.value|default:'' }}"
+                    placeholder="e.g., Land Price Model v2" required />
+                <p class="text-sm text-muted-foreground mt-1">Give your model a descriptive name</p>
+            </div>
+
+            <!-- Version Field -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Version *
+                </label>
+                <input type="text" name="version" class="form-input" value="{{ form.version.value|default:'' }}"
+                    placeholder="e.g., 2.0.1" required />
+                <p class="text-sm text-muted-foreground mt-1">Semantic versioning recommended (major.minor.patch)</p>
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    Description *
+                </label>
+                <textarea name="description" class="form-input" rows="4"
+                    placeholder="Describe the model architecture, training data used, accuracy metrics, and any improvements over previous versions..."
+                    required>{{ form.description.value|default:'' }}</textarea>
+            </div>
+
+            <!-- File Upload -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Model File (.pkl) *
+                </label>
+                <div
+                    style="border: 2px dashed var(--color-border); border-radius: var(--radius-lg); padding: var(--spacing-6); text-align: center; background: var(--color-primary-50);">
+                    <input type="file" name="model_file" accept=".pkl" class="form-input"
+                        style="display: block; width: 100%; cursor: pointer;" required />
+                    <p class="text-sm text-muted-foreground mt-2">
+                        Upload a scikit-learn model saved with joblib (.pkl format, max 50MB)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: var(--spacing-4); margin-top: var(--spacing-8);">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="margin-right: 8px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Upload Model
+                </button>
+                <a href="{% url 'data_scientist:model_list' %}" class="btn btn-secondary"
+                    style="flex: 1; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

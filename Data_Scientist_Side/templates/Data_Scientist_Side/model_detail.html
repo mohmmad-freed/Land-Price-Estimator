@@ -1,0 +1,181 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}{{ model.name }} - Data Scientist Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Model Header Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 900px; margin: 0 auto;">
+            <div class="flex items-center gap-6">
+                <!-- Model Icon -->
+                <div
+                    style="width: 80px; height: 80px; border-radius: var(--radius-xl); background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                    </svg>
+                </div>
+                <!-- Model Info -->
+                <div style="flex: 1;">
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-2xl font-bold" style="color: var(--color-text-main);">
+                            {{ model.name }}</h1>
+                        {% if is_active %}
+                        <span
+                            style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600)); color: white; font-size: 0.75rem; font-weight: 600;">
+                            ✓ Active
+                        </span>
+                        {% endif %}
+                    </div>
+                    <p class="text-lg text-muted-foreground">Version {{ model.version }}</p>
+                </div>
+                <!-- Actions -->
+                <div style="display: flex; gap: var(--spacing-2);">
+                    {% if not is_active %}
+                    <a href="{% url 'data_scientist:model_activate' model.id %}" class="btn btn-primary">
+                        Set as Active
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'data_scientist:model_list' %}" class="btn btn-secondary">
+                        Back to Models
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="container mb-8" style="max-width: 900px; margin: 0 auto;">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Status -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Status</p>
+
+                    <h3 class="text-lg font-bold {% if is_active %}text-primary{% else %}text-main{% endif %}"
+                        style="margin-top: var(--spacing-1);">
+                        {% if is_active %}Active{% else %}Inactive{% endif %}
+                    </h3>
+                </div>
+
+                <div style="font-size: 2rem; opacity: 0.5;">{% if is_active %}✅{% else %}⏸️{% endif %}</div>
+            </div>
+        </div>
+
+        <!-- Predictions Made -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Predictions Made</p>
+                    <h3 class="text-2xl font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ valuation_count }}</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📊</div>
+            </div>
+        </div>
+
+        <!-- Uploaded -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Uploaded</p>
+                    <h3 class="text-lg font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ model.created_at|date:"M d, Y" }}</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📅</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Details -->
+<div class="container" style="max-width: 900px; margin: 0 auto;">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Description Card -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <h3 class="text-lg font-bold mb-4" style="color: var(--color-text-main);">Description</h3>
+            <p class="text-muted-foreground" style="line-height: 1.6;">
+                {{ model.description }}
+            </p>
+        </div>
+
+        <!-- Technical Details Card -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <h3 class="text-lg font-bold mb-4" style="color: var(--color-text-main);">Technical Details</h3>
+
+            <div class="space-y-4">
+                <!-- File Path -->
+                <div class="flex items-start gap-4">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-600);">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <p class="text-sm text-muted-foreground">File Path</p>
+                        <p class="text-sm font-mono"
+                            style="color: var(--color-text-main); margin-top: 2px; word-break: break-all;">
+                            {{ model.model_file_path }}</p>
+                    </div>
+                </div>
+
+                <!-- Created By -->
+                <div class="flex items-start gap-4">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-secondary-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-text-main);">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <p class="text-sm text-muted-foreground">Uploaded By</p>
+                        <p class="text-base font-semibold" style="color: var(--color-text-main); margin-top: 2px;">
+                            {{ model.created_by.name|default:model.created_by.email }}</p>
+                    </div>
+                </div>
+
+                <!-- Created At -->
+                <div class="flex items-start gap-4">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-600);">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <p class="text-sm text-muted-foreground">Upload Date & Time</p>
+                        <p class="text-base font-semibold" style="color: var(--color-text-main); margin-top: 2px;">
+                            {{ model.created_at|date:"F d, Y" }} at {{ model.created_at|time:"H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

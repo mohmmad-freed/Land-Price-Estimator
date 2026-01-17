@@ -153,3 +153,6 @@ EMAIL_HOST_PASSWORD = os.environ.get("BREVO_SMTP_PASS")
 DEFAULT_FROM_EMAIL = "LandPriceEstimator <msamalq306@gmail.com>"
 
 
+# Media files (uploaded by users)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

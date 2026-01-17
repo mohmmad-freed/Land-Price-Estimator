@@ -1,0 +1,157 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+{% block title %}Data Scientist Dashboard{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 800px; margin: 0 auto;">
+            <div class="text-center">
+                <span style="font-size: 2rem;">🔬</span>
+                <h1 class="text-3xl font-bold mb-2"
+                    style="color: var(--color-text-main); margin-top: var(--spacing-2);">Welcome,
+                    {{ request.user.name|default:request.user.email }}!</h1>
+                <p class="text-muted-foreground">Data Scientist Dashboard - Machine Learning & Model Management</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Overview -->
+<div class="mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Models Card -->
+        <a href="{% url 'data_scientist:model_list' %}" style="text-decoration: none;">
+            <div class="card card-glass hover:shadow-lg transition-all" style="padding: var(--spacing-6);">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-muted-foreground">ML Models</p>
+                        <h3 class="text-2xl font-bold"
+                            style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                            {{ total_models }}</h3>
+                    </div>
+                    <div style="font-size: 2rem; opacity: 0.5;">🤖</div>
+                </div>
+            </div>
+        </a>
+
+        <!-- Active Model Card -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Active Model</p>
+                    <h3 class="text-lg font-bold"
+                        style="color: var(--color-primary-500); margin-top: var(--spacing-1);">
+                        {% if active_model %}{{ active_model.name }} v{{ active_model.version }}{% else %}None{% endif
+                        %}
+                    </h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">✅</div>
+            </div>
+        </div>
+
+        <!-- Upload Card -->
+        <a href="{% url 'data_scientist:model_upload' %}" style="text-decoration: none;">
+            <div class="card card-glass hover:shadow-lg transition-all" style="padding: var(--spacing-6);">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-muted-foreground">Quick Action</p>
+                        <h3 class="text-lg font-bold"
+                            style="color: var(--color-primary-500); margin-top: var(--spacing-1);">
+                            Upload New Model</h3>
+                    </div>
+                    <div style="font-size: 2rem; opacity: 0.5;">📤</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Quick Access Cards -->
+<div>
+    <h2 class="text-2xl font-semibold mb-6" style="color: var(--color-text-main);">Quick Access</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Model Training Card -->
+        <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
+            style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <!-- Gradient Background -->
+            <div
+                style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600)); opacity: 0.1; border-radius: 50%;">
+            </div>
+
+            <div class="flex flex-col items-center text-center">
+                <div
+                    style="width: 56px; height: 56px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600)); display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-3); box-shadow: var(--shadow-md);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold mb-1" style="color: var(--color-text-main);">Model Training</h3>
+                <p class="text-sm text-muted-foreground">Train and fine-tune ML models</p>
+            </div>
+        </div>
+
+        <!-- Data Analysis Card -->
+        <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
+            style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <!-- Gradient Background -->
+            <div
+                style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1, #4f46e5); opacity: 0.1; border-radius: 50%;">
+            </div>
+
+            <div class="flex flex-col items-center text-center">
+                <div
+                    style="width: 56px; height: 56px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-3); box-shadow: var(--shadow-md);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold mb-1" style="color: var(--color-text-main);">Data Analysis</h3>
+                <p class="text-sm text-muted-foreground">Analyze datasets and trends</p>
+            </div>
+        </div>
+
+        <!-- Model Performance Card -->
+        <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
+            style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <!-- Gradient Background -->
+            <div
+                style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: linear-gradient(135deg, #f59e0b, #d97706); opacity: 0.1; border-radius: 50%;">
+            </div>
+
+            <div class="flex flex-col items-center text-center">
+                <div
+                    style="width: 56px; height: 56px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-3); box-shadow: var(--shadow-md);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold mb-1" style="color: var(--color-text-main);">Model Performance</h3>
+                <p class="text-sm text-muted-foreground">Monitor model metrics</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endif %}
+{% endblock %}

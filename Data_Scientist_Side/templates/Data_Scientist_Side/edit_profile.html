@@ -1,0 +1,175 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - Data Scientist Portal{% endblock %}
+
+{% block content %}
+
+<!-- Error Messages -->
+{% if form.errors %}
+<div class="container mb-4">
+    <div class="p-4 rounded-lg"
+        style="background: rgba(239, 68, 68, 0.1); border: 1px solid var(--color-danger); color: var(--color-danger);">
+        <p class="font-semibold mb-2">Please correct the following errors:</p>
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div>• {{ error }}</div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Page Header Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 700px; margin: 0 auto;">
+            <div class="text-center">
+                <span style="font-size: 2rem;">✏️</span>
+                <h1 class="text-3xl font-bold mb-2"
+                    style="color: var(--color-text-main); margin-top: var(--spacing-2);">Edit Profile</h1>
+                <p class="text-muted-foreground">Update your account information</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Form -->
+<div class="container" style="max-width: 700px; margin: 0 auto;">
+    <div class="card card-glass mb-6" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+        <h2 class="text-xl font-semibold mb-6" style="color: var(--color-text-main);">Personal Information</h2>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <!-- Name Field -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Full Name
+                </label>
+                <input type="text" name="name" class="form-input" value="{{ form.name.value|default:'' }}"
+                    placeholder="Enter your full name" required />
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    Email Address
+                </label>
+                <input type="email" name="email" class="form-input" value="{{ form.email.value|default:'' }}"
+                    placeholder="Enter your email" required />
+            </div>
+
+            <!-- Phone Field -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    Phone Number
+                </label>
+                <input type="tel" name="phone" class="form-input" value="{{ form.phone.value|default:'' }}"
+                    placeholder="Enter your phone number" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: var(--spacing-4); margin-top: var(--spacing-8);">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Save Changes
+                </button>
+                <a href="{% url 'data_scientist:profile' %}" class="btn btn-secondary"
+                    style="flex: 1; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Password Change Section -->
+    <div class="card card-glass" style="padding: var(--spacing-8); border-radius: var(--radius-xl);">
+        <div x-data="{ open: false }">
+            <!-- Toggle Header -->
+            <div @click="open = !open" class="cursor-pointer flex items-center justify-between"
+                style="padding: var(--spacing-4); border-radius: var(--radius-lg); background: var(--color-primary-50); transition: all 0.2s;">
+                <div class="flex items-center gap-3">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-500); display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold" style="color: var(--color-text-main);">Change Password</p>
+                        <p class="text-sm text-muted-foreground">Click to update your password</p>
+                    </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--color-primary-500); transition: transform 0.3s;"
+                    :style="open && 'transform: rotate(180deg)'">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            <!-- Password Fields (Collapsible) -->
+            <div x-show="open" x-transition style="margin-top: var(--spacing-6);">
+                <form method="POST" action="">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" name="current_password" class="form-input"
+                            placeholder="Enter current password" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="new_password" class="form-input"
+                            placeholder="Enter new password" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="confirm_password" class="form-input"
+                            placeholder="Confirm new password" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-4);">
+                        Update Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

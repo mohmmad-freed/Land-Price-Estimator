@@ -10,9 +10,9 @@ def loginPage(request):
     
     if request.user.is_authenticated:
         user = request.user
-        if user.type == 'normal_user':
+        if user.type == 'normal':
             return redirect('normal_user:home')
-        elif user.type == 'data_scientist':
+        elif user.type in ('scientist', 'data_scientist'):
             return redirect('data_scientist:home')
         elif user.type == 'admin':
             return redirect('admin_side:home')
@@ -34,7 +34,7 @@ def loginPage(request):
                 
             if user.type == 'normal':
                 return redirect('normal_user:home')
-            elif user.type == 'scientist':
+            elif user.type in ('scientist', 'data_scientist'):
                 return redirect('data_scientist:home')
             elif user.type == 'admin':
                 return redirect('admin_side:home')

@@ -1,0 +1,225 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Profile - Data Scientist Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Profile Header Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 900px; margin: 0 auto;">
+            <div class="flex items-center gap-6">
+                <!-- Avatar -->
+                <div
+                    style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: white; box-shadow: var(--shadow-lg);">
+                    {{ user.name.0|upper|default:"D" }}
+                </div>
+                <!-- User Info -->
+                <div style="flex: 1;">
+                    <h1 class="text-3xl font-bold mb-2" style="color: var(--color-text-main);">
+                        {{ user.name|default:"Data Scientist" }}</h1>
+                    <p class="text-lg text-muted-foreground">
+                        <span
+                            style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--radius-full); background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-size: 0.875rem;">
+                            🔬 Data Scientist
+                        </span>
+                    </p>
+                </div>
+                <!-- Edit Button -->
+                <a href="{% url 'data_scientist:edit-profile' %}" class="btn btn-primary"
+                    style="display: inline-flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Dashboard -->
+<div class="container mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Role -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Role</p>
+                    <h3 class="text-lg font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        Data Scientist</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">🔬</div>
+            </div>
+        </div>
+
+        <!-- Last Login -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Last Login</p>
+                    <h3 class="text-lg font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ user.last_login|date:"M d, Y"|default:"Today" }}</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">🕐</div>
+            </div>
+        </div>
+
+        <!-- Member Since -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Member Since</p>
+                    <h3 class="text-lg font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ user.date_joined|date:"M Y" }}</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📅</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Information Section -->
+<div class="container">
+    <h2 class="text-2xl font-semibold mb-4" style="color: var(--color-text-main);">Personal Information</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Contact Info Card -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <h3 class="text-lg font-bold mb-4" style="color: var(--color-text-main);">Contact Details</h3>
+
+            <div class="space-y-4">
+                <!-- Full Name -->
+                <div class="flex items-start gap-4">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-600);">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <p class="text-sm text-muted-foreground">Full Name</p>
+                        <p class="text-base font-semibold" style="color: var(--color-text-main); margin-top: 2px;">
+                            {{ user.name|default:"Not set" }}</p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="flex items-start gap-4">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-secondary-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-text-main);">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <p class="text-sm text-muted-foreground">Email Address</p>
+                        <p class="text-base font-semibold" style="color: var(--color-text-main); margin-top: 2px;">
+                            {{ user.email|default:"Not set" }}</p>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="flex items-start gap-4">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-primary-600);">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <p class="text-sm text-muted-foreground">Phone Number</p>
+                        <p class="text-base font-semibold" style="color: var(--color-text-main); margin-top: 2px;">
+                            {{ user.phone|default:"Not set" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="card card-glass" style="padding: var(--spacing-6);">
+            <h3 class="text-lg font-bold mb-4" style="color: var(--color-text-main);">Quick Actions</h3>
+
+            <div class="space-y-3">
+                <!-- Dashboard -->
+                <a href="{% url 'data_scientist:dashboard' %}"
+                    class="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    style="background: var(--color-primary-50); text-decoration: none;">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-500); display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="7" height="9" x="3" y="3" rx="1" />
+                            <rect width="7" height="5" x="14" y="3" rx="1" />
+                            <rect width="7" height="9" x="14" y="12" rx="1" />
+                            <rect width="7" height="5" x="3" y="16" rx="1" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold" style="color: var(--color-text-main);">Dashboard</p>
+                        <p class="text-sm text-muted-foreground">Go to main dashboard</p>
+                    </div>
+                </a>
+
+                <!-- Edit Profile -->
+                <a href="{% url 'data_scientist:edit-profile' %}"
+                    class="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    style="background: var(--color-secondary-100); text-decoration: none;">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-text-main); display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold" style="color: var(--color-text-main);">Edit Profile</p>
+                        <p class="text-sm text-muted-foreground">Update your information</p>
+                    </div>
+                </a>
+
+                <!-- Change Password -->
+                <a href="{% url 'data_scientist:edit-profile' %}"
+                    class="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    style="background: var(--color-primary-50); text-decoration: none;">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: var(--radius-lg); background: var(--color-primary-500); display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold" style="color: var(--color-text-main);">Change Password</p>
+                        <p class="text-sm text-muted-foreground">Update your security</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
