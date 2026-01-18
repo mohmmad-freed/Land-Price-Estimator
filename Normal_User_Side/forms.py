@@ -49,6 +49,24 @@ class UserForm(forms.ModelForm):
         return phone
 
 
+ProjectRoadFormSet = inlineformset_factory(
+    Project,
+    ProjectRoad,
+    fields=['road_status', 'width_m'],  # only the real model fields
+    can_delete=True,  # allows the "Remove" checkbox automatically
+    max_num=3,
+    widgets={
+        'road_status': forms.Select(attrs={'class': 'form-select'}),
+        'width_m': forms.NumberInput(attrs={'class': 'form-input', 'min': '0.01', 'step': '0.01'}),
+    },
+    labels={
+        'road_status': 'Road Status',
+        'width_m': 'Road Width (m)',
+    }
+)
+
+
+
 class ProjectForm(forms.ModelForm):
     # Helper fields for location hierarchy (not saved to Project model)
     governorate = forms.ModelChoiceField(
@@ -178,27 +196,3 @@ class ProjectForm(forms.ModelForm):
         return cleaned_data
 
 
-# Inline formset for ProjectRoad
-ProjectRoadFormSet = inlineformset_factory(
-    Project,
-    ProjectRoad,
-    fields=['road_status', 'road_ownership', 'is_paved', 'width_m'],
-    
-    
-    min_num=1,
-    validate_min=True,
-    can_delete=True,
-    max_num=3,   # Limit to 3 roads (test)
-    widgets={
-        'road_status': forms.Select(attrs={'class': 'form-select'}),
-        'road_ownership': forms.Select(attrs={'class': 'form-select'}),
-        'is_paved': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
-        'width_m': forms.NumberInput(attrs={'class': 'form-input', 'min': '0.01', 'step': '0.01', 'placeholder': 'Width in meters'}),
-    },
-    labels={
-        'road_status': 'Road Status',
-        'road_ownership': 'Road Ownership',
-        'is_paved': 'Is Paved?',
-        'width_m': 'Road Width (m)',
-    }
-)

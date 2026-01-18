@@ -2,7 +2,7 @@ from django.contrib import admin
 from core.models import (
     Governorate, Town, Area, Neighborhood,
     LandUseType, FacilityType, EnvironmentalFactorType,
-    Project, ProjectLandUse, ProjectFacility, ProjectEnvironmentalFactor,
+    Project, 
     ProjectRoad, MLModel, Setting, Valuation
 )
 
@@ -70,22 +70,6 @@ class EnvironmentalFactorTypeAdmin(admin.ModelAdmin):
     exclude = ['code']  # Hide code field from form
 
 
-class ProjectLandUseInline(admin.TabularInline):
-    model = ProjectLandUse
-    extra = 1
-    readonly_fields = ['created_at', 'updated_at']
-
-
-class ProjectFacilityInline(admin.TabularInline):
-    model = ProjectFacility
-    extra = 1
-    readonly_fields = ['created_at', 'updated_at']
-
-
-class ProjectEnvironmentalFactorInline(admin.TabularInline):
-    model = ProjectEnvironmentalFactor
-    extra = 1
-    readonly_fields = ['created_at', 'updated_at']
 
 
 class ProjectRoadInline(admin.TabularInline):
@@ -100,7 +84,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ['status', 'land_type', 'political_classification', 'deleted_at', 'created_at']
     search_fields = ['project_name', 'neighborhood_no', 'parcel_no']
     readonly_fields = ['created_at', 'updated_at']
-    inlines = [ProjectLandUseInline, ProjectFacilityInline, ProjectEnvironmentalFactorInline, ProjectRoadInline]
+    inlines = [ProjectRoadInline]
     
     fieldsets = (
         ('Project Information', {
