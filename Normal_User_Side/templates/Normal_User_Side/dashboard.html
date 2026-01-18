@@ -77,7 +77,7 @@
                 <div>
                     <p class="text-sm text-muted-foreground">Total Value</p>
                     <h3 class="text-2xl font-bold"
-                        style="color: var(--color-primary-500); margin-top: var(--spacing-1);">{{ total_estimated_price|default:0|floatformat:0|intcomma }} JOD</h3>
+                        style="color: var(--color-primary-500); margin-top: var(--spacing-1);">{{ total_estimated_price_formatted }} JOD</h3>
                 </div>
                 <div style="font-size: 2rem; opacity: 0.5;">💰</div>
             </div>
@@ -187,8 +187,12 @@
                     {% if project.total_estimated_value %}
                     <span class="text-sm text-muted-foreground">Estimated Value:</span>
                     <div class="text-lg font-bold" style="color: var(--color-primary-500);">
-                        {{ project.estimated_price_float|floatformat:2|intcomma }} JOD/m² × {{ project.area_m2_float|floatformat:2|intcomma }} m² = {{ project.total_estimated_value|floatformat:0|intcomma }} JOD
+                        {{ project.estimated_price_float|floatformat:2|intcomma }} JOD/m² 
 
+                    </div>
+                    <span class="text-sm text-muted-foreground">Total parcel value:</span>
+                    <div class="text-lg font-bold" style="color: var(--color-primary-500);">
+                        {{ project.total_estimated_value_formatted }} JOD
                     </div>
                     {% else %}
                     <span class="text-sm text-muted-foreground">No estimation yet</span>

@@ -15,9 +15,21 @@ User = get_user_model()
 
 @login_required
 def dashboard(request):
-    recent_projects = Project.objects.filter(created_by=request.user).order_by('-created_at')[:6]
+    def format_price(value):
+        if value >= 1_000_000:
+            return f"{value / 1_000_000:.2f}M"
+        elif value >= 1_000:
+            return f"{value / 1_000:.1f}k"
+        else:
+            return f"{value:.0f}"
+    
+    # Get all projects for the user
+    all_projects = Project.objects.filter(created_by=request.user)
+    
+    # Get recent projects
+    recent_projects = all_projects.order_by('-created_at')[:6]
 
-    # Prepare values for template
+    # Prepare values for recent projects template display
     for project in recent_projects:
         # Safely convert Decimals to floats
         try:
@@ -32,16 +44,27 @@ def dashboard(request):
         
         # Pre-calculate total value to avoid arithmetic in template
         project.total_estimated_value = project.estimated_price_float * project.area_m2_float
+        project.total_estimated_value_formatted = format_price(project.total_estimated_value)  # ADD THIS LINE
 
-    completed_count = Project.objects.filter(created_by=request.user, status='COMPLETED').count()
-    draft_count = Project.objects.filter(created_by=request.user, status='DRAFT').count()
-    total_estimated_price = sum(p.total_estimated_value for p in recent_projects)
+    # Calculate total estimated value for ALL projects
+    total_estimated_price = 0.0
+    for project in all_projects:
+        try:
+            price = float(project.estimated_price) if project.estimated_price is not None else 0.0
+            area = float(project.area_m2) if project.area_m2 is not None else 0.0
+            total_estimated_price += price * area
+        except (TypeError, ValueError):
+            continue
+
+    completed_count = all_projects.filter(status='COMPLETED').count()
+    draft_count = all_projects.filter(status='DRAFT').count()
 
     context = {
         'recent_projects': recent_projects,
         'completed_count': completed_count,
         'draft_count': draft_count,
         'total_estimated_price': total_estimated_price,
+        'total_estimated_price_formatted': format_price(total_estimated_price),
     }
     return render(request, 'Normal_User_Side/dashboard.html', context)
 
@@ -76,12 +99,30 @@ def newProject(request, project_id=None):
     Remove road checkbox sets defaults for ML model.
     Parcel price is calculated as estimated_price * area_m2
     """
+    def format_price(value):
+        if value is None:
+            return "N/A"
+        try:
+            value = float(value)
+            if value >= 1_000_000:
+               return f"{value / 1_000_000:.1f}M"
+            elif value >= 1_000:
+               return f"{value / 1_000:.0f}k"
+            else:
+                return f"{value:.0f}"
+        except (TypeError, ValueError):
+           return "0"
     if project_id:
         project = get_object_or_404(Project, pk=project_id)
         is_edit = True
     else:
         project = None
         is_edit = False
+
+    # Initialize parcel_price at the top level
+    parcel_price = None
+    if project and project.estimated_price and project.area_m2:
+        parcel_price = float(project.estimated_price) * float(project.area_m2)
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
@@ -150,11 +191,12 @@ def newProject(request, project_id=None):
                         pass
                     
                     parcel_price = predicted_price * float(project.area_m2 or 0)
+    
                     messages.success(
                         request,
                         f'Project "{project.project_name}" saved and completed! '
                         f'Estimated price: {predicted_price:.2f} JOD/m², '
-                        f'Total parcel value: {parcel_price:,.0f} JOD'
+                        f'Total parcel value: {format_price(parcel_price)} JOD'
                     )
                 except Exception as e:
                     messages.error(
@@ -176,19 +218,24 @@ def newProject(request, project_id=None):
             messages.error(request, 'Please correct the errors below.')
 
     else:
-        # GET request: initialize form & road formset
-        form = ProjectForm(instance=project)
-        road_formset = ProjectRoadFormSet(
-            instance=project,
-            queryset=ProjectRoad.objects.filter(project=project, deleted_at__isnull=True) 
-                     if project else ProjectRoad.objects.none()
-        )
-
+    # GET request: initialize form & road formset
+     form = ProjectForm(instance=project)
+     road_formset = ProjectRoadFormSet(
+        instance=project,
+        queryset=ProjectRoad.objects.filter(
+            project=project, 
+            deleted_at__isnull=True
+        ).exclude(road_status='FALSE') if project else ProjectRoad.objects.none()
+    )
+    
+    
+      
     context = {
         'form': form,
         'road_formset': road_formset,
         'is_edit': is_edit,
         'project': project,
+        'parcel_price_formatted': format_price(parcel_price), 
     }
 
     return render(request, 'Normal_User_Side/new_project.html', context)
@@ -199,37 +246,79 @@ def newProject(request, project_id=None):
 
 @login_required
 def viewProjects(request):
-     projects = Project.objects.filter(created_by=request.user)
-      # Get filter parameters from GET request
-     land_type = request.GET.get('land_type')
-     political_type = request.GET.get('political_type')
-     status = request.GET.get('status')
-     search_query = request.GET.get('search')
-     sort_by = request.GET.get('sort', '-created_at')
+    def format_price(value):
+        if value is None:
+            return "N/A"
+        try:
+            value = float(value)
+            if value >= 1_000_000:
+                return f"{value / 1_000_000:.1f}M"
+            elif value >= 1_000:
+                return f"{value / 1_000:.1f}k"
+            else:
+                return f"{value:.0f}"
+        except (TypeError, ValueError):
+            return "0"
+    
+    projects = Project.objects.filter(created_by=request.user, deleted_at__isnull=True)
+    
+    # Get filter parameters from GET request
+    land_type = request.GET.get('land_type')
+    political_type = request.GET.get('political_type')
+    status = request.GET.get('status')
+    search_query = request.GET.get('search')
+    sort_by = request.GET.get('sort', '-created_at')
 
     # Apply filters in the view
-     if land_type:
+    if land_type:
         projects = projects.filter(land_type=land_type)
-     if political_type:
+    if political_type:
         projects = projects.filter(political_classification=political_type)
-     if status:
+    if status:
         projects = projects.filter(status=status)
-     if search_query:
+    if search_query:
         projects = projects.filter(project_name__icontains=search_query)
-     
-     # Apply sorting
-     if sort_by in ['created_at', '-created_at']:
-         projects = projects.order_by(sort_by)
-     else:
-         projects = projects.order_by('-created_at')
+    
+    # Apply sorting
+    if sort_by in ['created_at', '-created_at']:
+        projects = projects.order_by(sort_by)
+    else:
+        projects = projects.order_by('-created_at')
 
-     context = {
+    # Calculate and format total parcel value for each project
+    for project in projects:
+        if project.estimated_price and project.area_m2:
+            parcel_value = float(project.estimated_price) * float(project.area_m2)
+            project.parcel_value = parcel_value
+            project.parcel_value_formatted = format_price(parcel_value)
+        else:
+            project.parcel_value = None
+            project.parcel_value_formatted = "N/A"
+
+    context = {
         'projects': projects,
         'land_types': Project.LandType.choices,
         'political_types': Project.PoliticalClassification.choices,
         'statuses': Project.Status.choices,
     }
-     return render(request, 'Normal_User_Side/projects.html',context)
+    return render(request, 'Normal_User_Side/projects.html', context)
 
 
-
+@login_required
+def deleteProject(request, project_id):
+    project = get_object_or_404(Project, pk=project_id, created_by=request.user)
+    
+    if request.method == 'POST':
+        project_name = project.project_name
+        
+        # Delete related records first to avoid ProtectedError
+        ProjectRoad.objects.filter(project=project).delete()
+        Valuation.objects.filter(project=project).delete()
+        
+        # Now delete the project itself
+        project.delete()
+        
+        messages.success(request, f'Project "{project_name}" has been permanently deleted.')
+        return redirect('normal_user:projects')
+    
+    return redirect('normal_user:projects')
