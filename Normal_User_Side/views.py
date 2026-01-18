@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from .ml.predict import predict_land_price
-from core.models import Project, ProjectRoad
+from core.models import Project, ProjectRoad, Valuation, Setting
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, ProjectForm, ProjectRoadFormSet
 from django.db.models import F
@@ -19,9 +19,17 @@ def dashboard(request):
 
     # Prepare values for template
     for project in recent_projects:
-        # Convert Decimals to floats
-        project.estimated_price_float = float(project.estimated_price or 0)
-        project.area_m2_float = float(project.area_m2 or 0)
+        # Safely convert Decimals to floats
+        try:
+            project.estimated_price_float = float(project.estimated_price) if project.estimated_price is not None else 0.0
+        except (TypeError, ValueError):
+            project.estimated_price_float = 0.0
+        
+        try:
+            project.area_m2_float = float(project.area_m2) if project.area_m2 is not None else 0.0
+        except (TypeError, ValueError):
+            project.area_m2_float = 0.0
+        
         # Pre-calculate total value to avoid arithmetic in template
         project.total_estimated_value = project.estimated_price_float * project.area_m2_float
 
@@ -106,16 +114,55 @@ def newProject(request, project_id=None):
 
             # Predict price if project is completed
             if action == 'complete':
-                predicted_price = predict_land_price(project, road_formset)
-                project.estimated_price = predicted_price
-                project.save(update_fields=['estimated_price', 'status'])
-                parcel_price = predicted_price * (project.area_m2 or 0)
-                messages.success(
-                    request,
-                    f'Project "{project.project_name}" saved and completed! '
-                    f'Estimated price per m²: {predicted_price:.0f} k JOD, '
-                    f'Parcel price: {parcel_price:.0f} k JOD'
-                )
+                try:
+                    predicted_price = predict_land_price(project, road_formset)
+                    if predicted_price is None:
+                        messages.error(
+                            request,
+                            'Unable to generate price estimate. Please ensure all required fields are filled correctly.'
+                        )
+                        project.status = 'DRAFT'
+                        project.save(update_fields=['status'])
+                        return redirect('normal_user:projects')
+                    
+                    project.estimated_price = predicted_price
+                    project.save(update_fields=['estimated_price', 'status'])
+                    
+                    # Create Valuation record for history tracking
+                    try:
+                        setting = Setting.objects.first()
+                        if setting and setting.active_ml_model:
+                            # Soft-delete any existing valuation for this project
+                            Valuation.objects.filter(
+                                project=project, 
+                                deleted_at__isnull=True
+                            ).update(deleted_at=timezone.now())
+                            
+                            # Create new valuation
+                            Valuation.objects.create(
+                                project=project,
+                                model=setting.active_ml_model,
+                                predicted_price_per_m2=predicted_price,
+                                created_by=request.user
+                            )
+                    except Exception:
+                        # Don't fail the whole operation if valuation creation fails
+                        pass
+                    
+                    parcel_price = predicted_price * float(project.area_m2 or 0)
+                    messages.success(
+                        request,
+                        f'Project "{project.project_name}" saved and completed! '
+                        f'Estimated price: {predicted_price:.2f} JOD/m², '
+                        f'Total parcel value: {parcel_price:,.0f} JOD'
+                    )
+                except Exception as e:
+                    messages.error(
+                        request,
+                        f'Error generating price estimate: {str(e)}. Project saved as draft.'
+                    )
+                    project.status = 'DRAFT'
+                    project.save(update_fields=['status'])
             else:
                 project.save(update_fields=['status'])
                 messages.success(

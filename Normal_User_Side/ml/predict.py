@@ -24,18 +24,8 @@ def predict_land_price(project, road_formset=None):
             road_widths[i] = float(road.width_m or 0)
 
     # ----------------------------
-    # Land uses (multi-select)
-    # ----------------------------
-    land_use_codes = set(project.land_uses.values_list("land_use_type__code", flat=True))
-
-    # ----------------------------
-    # Facilities / Environmental factors
-    # ----------------------------
-    facility_codes = set(project.projectfacility_set.values_list("facility_type__code", flat=True))
-    env_codes = set(project.projectenvironmentalfactor_set.values_list("environmental_factor_type__code", flat=True))
-
-    # ----------------------------
     # Build input row (MUST MATCH TRAINING)
+    # Uses boolean fields directly from Project model
     # ----------------------------
     row = {
         # categorical
@@ -53,26 +43,27 @@ def predict_land_price(project, road_formset=None):
 
         # numeric
         "area_m2": float(project.area_m2),
+        "parcel_frontage (m)": float(project.parcel_frontage) if project.parcel_frontage else 0.0,
         "width_m": road_widths[0],
         "width_m.1": road_widths[1],
         "width_m.2": road_widths[2],
 
-        # binary: land uses
-        "land_use_residential": int("RESIDENTIAL" in land_use_codes),
-        "land_use_commercial": int("COMMERCIAL" in land_use_codes),
-        "land_use_agricultural": int("AGRICULTURAL" in land_use_codes),
-        "land_use_industrial": int("INDUSTRIAL" in land_use_codes),
+        # binary: land uses (using boolean fields from Project model)
+        "land_use_residential": int(project.land_use_residential),
+        "land_use_commercial": int(project.land_use_commercial),
+        "land_use_agricultural": int(project.land_use_agricultural),
+        "land_use_industrial": int(project.land_use_industrial),
 
-        # binary: facilities
-        "hospitals_facility": int("HOSPITAL" in facility_codes),
-        "schools_facility": int("SCHOOL" in facility_codes),
-        "police_facility": int("POLICE" in facility_codes),
-        "municipality_facility": int("MUNICIPALITY" in facility_codes),
+        # binary: facilities (using boolean fields from Project model)
+        "hospitals_facility": int(project.hospitals_facility),
+        "schools_facility": int(project.schools_facility),
+        "police_facility": int(project.police_facility),
+        "municipality_facility": int(project.municipality_facility),
 
-        # binary: environmental
-        "FACTORIES_NEARBY": int("FACTORIES_NEARBY" in env_codes),
-        "NOISY_FACILITIES": int("NOISY_FACILITIES" in env_codes),
-        "ANIMAL_FARMS": int("ANIMAL_FARMS" in env_codes),
+        # binary: environmental (using boolean fields from Project model)
+        "FACTORIES_NEARBY": int(project.FACTORIES_NEARBY),
+        "NOISY_FACILITIES": int(project.NOISY_FACILITIES),
+        "ANIMAL_FARMS": int(project.ANIMAL_FARMS),
 
         # water as binary
         "water": int(project.water == "YES"),

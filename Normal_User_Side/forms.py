@@ -6,8 +6,7 @@ import re
 from django.contrib.auth.hashers import check_password
 from django.forms import inlineformset_factory
 from core.models import (
-    Project, Governorate, Town, Area, Neighborhood,
-    LandUseType, FacilityType, EnvironmentalFactorType, ProjectRoad
+    Project, Governorate, Town, Area, Neighborhood, ProjectRoad
 )
 
 
@@ -49,26 +48,54 @@ class UserForm(forms.ModelForm):
         return phone
 
 
+class ProjectRoadForm(forms.ModelForm):
+    """Custom form for ProjectRoad that auto-derives road_ownership from road_status."""
+    
+    class Meta:
+        model = ProjectRoad
+        fields = ['road_status', 'width_m']
+        widgets = {
+            'road_status': forms.Select(attrs={'class': 'form-select'}),
+            'width_m': forms.NumberInput(attrs={'class': 'form-input', 'min': '0.01', 'step': '0.01'}),
+        }
+        labels = {
+            'road_status': 'Road Status',
+            'width_m': 'Road Width (m)',
+        }
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        
+        # Auto-derive road_ownership from road_status
+        road_status = self.cleaned_data.get('road_status', '')
+        if road_status.startswith('PUBLIC'):
+            instance.road_ownership = 'PUBLIC'
+        elif road_status.startswith('PRIVATE'):
+            instance.road_ownership = 'PRIVATE'
+        else:
+            # Default to PUBLIC for 'FALSE' (No Road) or unknown
+            instance.road_ownership = 'PUBLIC'
+        
+        # Auto-derive is_paved from road_status
+        instance.is_paved = 'PAVED' in road_status and 'UNPAVED' not in road_status
+        
+        if commit:
+            instance.save()
+        return instance
+
+
 ProjectRoadFormSet = inlineformset_factory(
     Project,
     ProjectRoad,
-    fields=['road_status', 'width_m'],  # only the real model fields
-    can_delete=True,  # allows the "Remove" checkbox automatically
+    form=ProjectRoadForm,
+    can_delete=True,
     max_num=3,
-    widgets={
-        'road_status': forms.Select(attrs={'class': 'form-select'}),
-        'width_m': forms.NumberInput(attrs={'class': 'form-input', 'min': '0.01', 'step': '0.01'}),
-    },
-    labels={
-        'road_status': 'Road Status',
-        'width_m': 'Road Width (m)',
-    }
+    extra=3,
 )
 
 
-
 class ProjectForm(forms.ModelForm):
-    # Helper fields for location hierarchy (not saved to Project model)
+    # Helper fields for location hierarchy
     governorate = forms.ModelChoiceField(
         queryset=Governorate.objects.filter(deleted_at__isnull=True),
         required=True,
@@ -92,31 +119,6 @@ class ProjectForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_area'}),
         help_text="Select area after town"
     )
-    
-    # Many-to-many fields with checkboxes
-    land_uses = forms.ModelMultipleChoiceField(
-        queryset=LandUseType.objects.filter(deleted_at__isnull=True),
-        widget=forms.CheckboxSelectMultiple,
-        required=True,
-        label="Intended Land Uses",
-        help_text="Select at least one intended use for this land"
-    )
-    
-    facilities = forms.ModelMultipleChoiceField(
-        queryset=FacilityType.objects.filter(deleted_at__isnull=True),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="Nearby Facilities",
-        help_text="Select all nearby facilities"
-    )
-    
-    environmental_factors = forms.ModelMultipleChoiceField(
-        queryset=EnvironmentalFactorType.objects.filter(deleted_at__isnull=True),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="Environmental Factors",
-        help_text="Select all applicable environmental factors"
-    )
 
     class Meta:
         model = Project
@@ -135,10 +137,25 @@ class ProjectForm(forms.ModelForm):
             'view_quality',
             'area_m2',
             'parcel_shape',
+            'parcel_frontage',
             'electricity',
             'water',
             'sewage',
             'ownership_document_type',
+            # Land Use boolean fields
+            'land_use_residential',
+            'land_use_commercial',
+            'land_use_agricultural',
+            'land_use_industrial',
+            # Facility boolean fields
+            'hospitals_facility',
+            'schools_facility',
+            'police_facility',
+            'municipality_facility',
+            # Environmental factor boolean fields
+            'FACTORIES_NEARBY',
+            'NOISY_FACILITIES',
+            'ANIMAL_FARMS',
         ]
         widgets = {
             'project_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Enter project name'}),
@@ -152,10 +169,23 @@ class ProjectForm(forms.ModelForm):
             'view_quality': forms.Select(attrs={'class': 'form-select'}),
             'area_m2': forms.NumberInput(attrs={'class': 'form-input', 'min': '0.01', 'step': '0.01', 'placeholder': 'e.g., 500.00'}),
             'parcel_shape': forms.Select(attrs={'class': 'form-select'}),
+            'parcel_frontage': forms.NumberInput(attrs={'class': 'form-input', 'min': '0', 'step': '0.01', 'placeholder': 'e.g., 25.00'}),
             'electricity': forms.Select(attrs={'class': 'form-select'}),
             'water': forms.Select(attrs={'class': 'form-select'}),
             'sewage': forms.Select(attrs={'class': 'form-select'}),
             'ownership_document_type': forms.Select(attrs={'class': 'form-select'}),
+            # Checkbox widgets for boolean fields
+            'land_use_residential': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'land_use_commercial': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'land_use_agricultural': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'land_use_industrial': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'hospitals_facility': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'schools_facility': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'police_facility': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'municipality_facility': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'FACTORIES_NEARBY': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'NOISY_FACILITIES': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+            'ANIMAL_FARMS': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
         labels = {
             'project_name': 'Project Name',
@@ -168,10 +198,25 @@ class ProjectForm(forms.ModelForm):
             'view_quality': 'View Quality',
             'area_m2': 'Land Area (m²)',
             'parcel_shape': 'Parcel Shape',
+            'parcel_frontage': 'Parcel Frontage (m)',
             'electricity': 'Electricity',
             'water': 'Water Supply',
             'sewage': 'Sewage System',
             'ownership_document_type': 'Ownership Document Type',
+            # Land Use labels
+            'land_use_residential': 'Residential',
+            'land_use_commercial': 'Commercial',
+            'land_use_agricultural': 'Agricultural',
+            'land_use_industrial': 'Industrial',
+            # Facility labels
+            'hospitals_facility': 'Hospitals Nearby',
+            'schools_facility': 'Schools Nearby',
+            'police_facility': 'Police Station Nearby',
+            'municipality_facility': 'Municipality Nearby',
+            # Environmental factor labels
+            'FACTORIES_NEARBY': 'Factories Nearby',
+            'NOISY_FACILITIES': 'Noisy Facilities',
+            'ANIMAL_FARMS': 'Animal Farms Nearby',
         }
 
     def __init__(self, *args, **kwargs):
@@ -189,10 +234,35 @@ class ProjectForm(forms.ModelForm):
         cleaned_data = super().clean()
         
         # Validate at least one land use is selected
-        land_uses = cleaned_data.get('land_uses')
-        if not land_uses or land_uses.count() == 0:
-            self.add_error('land_uses', 'Please select at least one intended land use.')
+        land_use_residential = cleaned_data.get('land_use_residential')
+        land_use_commercial = cleaned_data.get('land_use_commercial')
+        land_use_agricultural = cleaned_data.get('land_use_agricultural')
+        land_use_industrial = cleaned_data.get('land_use_industrial')
+        
+        if not any([land_use_residential, land_use_commercial, land_use_agricultural, land_use_industrial]):
+            raise ValidationError('Please select at least one intended land use.')
+        
+        # Check for duplicate parcel (neighborhood + neighborhood_no + parcel_no)
+        neighborhood = cleaned_data.get('neighborhood')
+        neighborhood_no = cleaned_data.get('neighborhood_no')
+        parcel_no = cleaned_data.get('parcel_no')
+        
+        if neighborhood and neighborhood_no and parcel_no:
+            existing = Project.objects.filter(
+                neighborhood=neighborhood,
+                neighborhood_no=neighborhood_no,
+                parcel_no=parcel_no,
+                deleted_at__isnull=True  # Respect soft-deleted records
+            )
+            # Exclude current instance if editing
+            if self.instance and self.instance.pk:
+                existing = existing.exclude(pk=self.instance.pk)
+            
+            if existing.exists():
+                raise ValidationError(
+                    f'A project with parcel number "{parcel_no}" in neighborhood "{neighborhood_no}" already exists. '
+                    'Please use different values or edit the existing project.'
+                )
         
         return cleaned_data
-
 
