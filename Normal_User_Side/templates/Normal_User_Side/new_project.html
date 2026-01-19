@@ -229,7 +229,7 @@
                         value="{{ form.neighborhood_no.value|default:'' }}">
                     <!-- Display field (read-only) -->
                     <input type="text" id="neighborhood_number_display" class="form-input" readonly disabled
-                        placeholder="Auto-populated when neighborhood is selected"
+                        placeholder="Auto-fills on neighborhood pick"
                         style="background: var(--color-secondary-100); cursor: not-allowed; max-width: 300px;"
                         value="{{ form.neighborhood_no.value|default:'' }}">
                     {% if form.neighborhood_no.errors %}
