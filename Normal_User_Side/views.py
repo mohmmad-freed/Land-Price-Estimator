@@ -3,8 +3,9 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+from django.http import JsonResponse
 from .ml.predict import predict_land_price
-from core.models import Project, ProjectRoad, Valuation, Setting
+from core.models import Project, ProjectRoad, Valuation, Setting, Town, Area, Neighborhood
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, ProjectForm, ProjectRoadFormSet
 from django.db.models import F
@@ -86,7 +87,7 @@ def editProfile(request):
             if new_password:
                  user.set_password(new_password)
             user.save()
-            return redirect('normal_user:profile', pk = user.id)
+            return redirect('normal:profile', pk = user.id)
     context = {"form":form}
 
     return render(request, 'Normal_User_Side/edit_profile.html', context)
@@ -143,11 +144,9 @@ def newProject(request, project_id=None):
                 road_data = road_form.cleaned_data
                 if road_data:
                     if road_data.get('DELETE', False):
-                        road = road_form.instance
-                        road.road_status = 'FALSE'
-                        road.width_m = 0
-                        road.project = project
-                        road.save()
+                        # Actually delete the road instead of marking with FALSE
+                        if road_form.instance.pk:
+                            road_form.instance.delete()
                     else:
                         road = road_form.save(commit=False)
                         road.project = project
@@ -164,7 +163,7 @@ def newProject(request, project_id=None):
                         )
                         project.status = 'DRAFT'
                         project.save(update_fields=['status'])
-                        return redirect('normal_user:projects')
+                        return redirect('normal:projects')
                     
                     project.estimated_price = predicted_price
                     project.save(update_fields=['estimated_price', 'status'])
@@ -212,7 +211,7 @@ def newProject(request, project_id=None):
                     f'Project "{project.project_name}" saved as draft!'
                 )
 
-            return redirect('normal_user:projects')
+            return redirect('normal:projects')
 
         else:
             messages.error(request, 'Please correct the errors below.')
@@ -225,7 +224,7 @@ def newProject(request, project_id=None):
         queryset=ProjectRoad.objects.filter(
             project=project, 
             deleted_at__isnull=True
-        ).exclude(road_status='FALSE') if project else ProjectRoad.objects.none()
+        ) if project else ProjectRoad.objects.none()
     )
     
     
@@ -319,6 +318,250 @@ def deleteProject(request, project_id):
         project.delete()
         
         messages.success(request, f'Project "{project_name}" has been permanently deleted.')
-        return redirect('normal_user:projects')
+        return redirect('normal:projects')
     
-    return redirect('normal_user:projects')
+    return redirect('normal:projects')
+
+
+# ============================================
+# JSON API Endpoints for Cascading Dropdowns
+# ============================================
+
+def get_towns(request):
+    """Returns towns for a given governorate_id as JSON."""
+    governorate_id = request.GET.get('governorate_id')
+    if not governorate_id:
+        return JsonResponse([], safe=False)
+    
+    towns = Town.objects.filter(
+        governorate_id=governorate_id,
+        deleted_at__isnull=True
+    ).values('id', 'name_ar').order_by('name_ar')
+    return JsonResponse(list(towns), safe=False)
+
+
+def get_areas(request):
+    """Returns areas for a given town_id as JSON."""
+    town_id = request.GET.get('town_id')
+    if not town_id:
+        return JsonResponse([], safe=False)
+    
+    areas = Area.objects.filter(
+        town_id=town_id,
+        deleted_at__isnull=True
+    ).values('id', 'name_ar').order_by('name_ar')
+    return JsonResponse(list(areas), safe=False)
+
+
+def get_neighborhoods(request):
+    """Returns neighborhoods for a given area_id as JSON, including code."""
+    area_id = request.GET.get('area_id')
+    if not area_id:
+        return JsonResponse([], safe=False)
+    
+    neighborhoods = Neighborhood.objects.filter(
+        area_id=area_id,
+        deleted_at__isnull=True
+    ).values('id', 'name_ar', 'code', 'number').order_by('name_ar')
+    return JsonResponse(list(neighborhoods), safe=False)
+
+
+def get_neighborhood_code(request):
+    """Returns the number for a specific neighborhood."""
+    neighborhood_id = request.GET.get('neighborhood_id')
+    if not neighborhood_id:
+        return JsonResponse({'code': ''})
+    
+    try:
+        neighborhood = Neighborhood.objects.get(
+            id=neighborhood_id,
+            deleted_at__isnull=True
+        )
+        return JsonResponse({'code': neighborhood.number or ''})
+    except Neighborhood.DoesNotExist:
+        return JsonResponse({'code': ''})
+
+
+import json
+
+@login_required
+def api_predict_price(request):
+    """
+    AJAX endpoint to validate form and get ML prediction.
+    Returns JSON with prediction result for modal display.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    project_id = request.POST.get('project_id')
+    if project_id:
+        project = get_object_or_404(Project, pk=project_id)
+        is_edit = True
+    else:
+        project = None
+        is_edit = False
+    
+    from .forms import ProjectForm, ProjectRoadFormSet
+    
+    form = ProjectForm(request.POST, instance=project)
+    road_formset = ProjectRoadFormSet(request.POST, instance=project)
+    
+    if form.is_valid() and road_formset.is_valid():
+        # Save project as draft temporarily
+        project = form.save(commit=False)
+        if not is_edit:
+            project.created_by = request.user
+        project.status = 'DRAFT'  # Keep as draft until confirmed
+        project.save()
+        
+        # Save roads
+        for road_form in road_formset:
+            road_data = road_form.cleaned_data
+            if road_data:
+                if road_data.get('DELETE', False):
+                    if road_form.instance.pk:
+                        road_form.instance.delete()
+                else:
+                    road = road_form.save(commit=False)
+                    road.project = project
+                    road.save()
+        
+        # Get prediction
+        try:
+            predicted_price = predict_land_price(project, road_formset)
+            if predicted_price is None:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Unable to generate price estimate. Please ensure all fields are filled correctly.'
+                })
+            
+            parcel_price = predicted_price * float(project.area_m2 or 0)
+            
+            return JsonResponse({
+                'success': True,
+                'project_id': project.id,
+                'project_name': project.project_name,
+                'predicted_price_per_m2': round(predicted_price, 2),
+                'area_m2': float(project.area_m2),
+                'total_parcel_value': round(parcel_price, 2),
+                'neighborhood': project.neighborhood.name_ar if project.neighborhood else '',
+                'parcel_no': project.parcel_no,
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': f'Error generating prediction: {str(e)}'
+            })
+    else:
+        # Form validation failed
+        errors = {}
+        for field, error_list in form.errors.items():
+            errors[field] = [str(e) for e in error_list]
+        for i, road_form in enumerate(road_formset):
+            for field, error_list in road_form.errors.items():
+                errors[f'road_{i}_{field}'] = [str(e) for e in error_list]
+        
+        return JsonResponse({
+            'success': False,
+            'validation_errors': errors,
+            'error': 'Please correct the errors below.'
+        })
+
+
+@login_required
+def api_confirm_prediction(request):
+    """
+    AJAX endpoint to confirm or reject prediction.
+    Accepts: project_id, action (accept/reject), user_expected_price (optional)
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    project_id = data.get('project_id')
+    action = data.get('action')  # 'accept' or 'reject'
+    user_expected_price = data.get('user_expected_price')
+    
+    if not project_id or not action:
+        return JsonResponse({'success': False, 'error': 'Missing required fields'})
+    
+    project = get_object_or_404(Project, pk=project_id, created_by=request.user)
+    
+    if action == 'accept':
+        # Finalize the project as completed
+        try:
+            predicted_price = predict_land_price(project, None)
+            project.estimated_price = predicted_price
+            project.status = 'COMPLETED'
+            project.save(update_fields=['estimated_price', 'status'])
+            
+            # Create Valuation record
+            setting = Setting.objects.first()
+            if setting and setting.active_ml_model:
+                Valuation.objects.filter(
+                    project=project, 
+                    deleted_at__isnull=True
+                ).update(deleted_at=timezone.now())
+                
+                valuation = Valuation.objects.create(
+                    project=project,
+                    model=setting.active_ml_model,
+                    predicted_price_per_m2=predicted_price,
+                    created_by=request.user
+                )
+                
+                # Store user's expected price if provided
+                if user_expected_price:
+                    try:
+                        valuation.user_expected_price = float(user_expected_price)
+                        valuation.save(update_fields=['user_expected_price'])
+                    except (ValueError, TypeError):
+                        pass
+            
+            return JsonResponse({
+                'success': True,
+                'action': 'accepted',
+                'redirect_url': '/normal/projects/'
+            })
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    elif action == 'reject':
+        # Keep project as draft
+        project.status = 'DRAFT'
+        project.save(update_fields=['status'])
+        
+        # Still store the user's expected price for ML training
+        if user_expected_price:
+            setting = Setting.objects.first()
+            if setting and setting.active_ml_model:
+                try:
+                    predicted_price = predict_land_price(project, None)
+                    Valuation.objects.filter(
+                        project=project, 
+                        deleted_at__isnull=True
+                    ).update(deleted_at=timezone.now())
+                    
+                    Valuation.objects.create(
+                        project=project,
+                        model=setting.active_ml_model,
+                        predicted_price_per_m2=predicted_price,
+                        user_expected_price=float(user_expected_price),
+                        created_by=request.user
+                    )
+                except Exception:
+                    pass
+        
+        return JsonResponse({
+            'success': True,
+            'action': 'rejected',
+            'redirect_url': '/normal/projects/'
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid action'})

@@ -5,9 +5,9 @@ def predict_land_price(project, road_formset=None):
     model = get_model()  # your joblib-loaded model
 
     # ----------------------------
-    # Roads (default = no road)
+    # Roads (default = FALSE for ML model when no road exists)
     # ----------------------------
-    road_statuses = ["FALSE", "FALSE", "FALSE"]
+    road_statuses = ["FALSE", "FALSE", "FALSE"]  # ML expects 'FALSE' for no road
     road_widths = [0, 0, 0]
 
     roads = road_formset.forms if road_formset else project.projectroad_set.all()

@@ -5,7 +5,7 @@
 
             <!-- Logo -->
             <a
-                href="{% if request.user.is_authenticated %}{% url 'normal_user:dashboard' %}{% else %}{% url 'users:login' %}{% endif %}">
+                href="{% if request.user.is_authenticated %}{% url 'normal:dashboard' %}{% else %}{% url 'users:login' %}{% endif %}">
                 <div class="flex items-center space-x-3">
                     <span style="font-size: 1.75rem;">🌿</span>
                     <h1 class="text-lg font-semibold text-foreground">
@@ -56,7 +56,7 @@
                     {% if request.user.is_authenticated %}
 
                     <!-- Profile -->
-                    <a href="{% url 'normal_user:profile' request.user.id %}"
+                    <a href="{% url 'normal:profile' request.user.id %}"
                         class="flex items-center space-x-2 px-4 py-2 text-sm hover:bg-muted transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

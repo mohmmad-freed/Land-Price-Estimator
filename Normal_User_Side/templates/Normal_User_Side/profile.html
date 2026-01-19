@@ -32,7 +32,7 @@
                     <p class="text-lg text-muted-foreground">{{ user.get_type_display|default:"User" }}</p>
                 </div>
                 <!-- Edit Button -->
-                <a href="{% url 'normal_user:edit-profile' %}" class="btn btn-primary"
+                <a href="{% url 'normal:edit-profile' %}" class="btn btn-primary"
                     style="display: inline-flex; align-items: center; gap: var(--spacing-2);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -171,7 +171,7 @@
 
             <div class="space-y-3">
                 <!-- View Projects -->
-                <a href="{% url 'normal_user:projects' %}"
+                <a href="{% url 'normal:projects' %}"
                     class="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                     style="background: var(--color-primary-50); text-decoration: none;">
                     <div
@@ -188,7 +188,7 @@
                 </a>
 
                 <!-- Dashboard -->
-                <a href="{% url 'normal_user:dashboard' %}"
+                <a href="{% url 'normal:dashboard' %}"
                     class="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                     style="background: var(--color-secondary-100); text-decoration: none;">
                     <div
@@ -208,7 +208,7 @@
                 </a>
 
                 <!-- Security -->
-                <a href="{% url 'normal_user:edit-profile' %}"
+                <a href="{% url 'normal:edit-profile' %}"
                     class="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                     style="background: var(--color-primary-50); text-decoration: none;">
                     <div

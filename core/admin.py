@@ -36,11 +36,12 @@ class AreaAdmin(admin.ModelAdmin):
 
 @admin.register(Neighborhood)
 class NeighborhoodAdmin(admin.ModelAdmin):
-    list_display = ['code', 'name_ar', 'area', 'created_at', 'deleted_at']
+    list_display = ['code', 'number', 'name_ar', 'area', 'created_at', 'deleted_at']
     list_filter = ['area', 'deleted_at']
-    search_fields = ['code', 'name_ar']
-    readonly_fields = ['created_at', 'updated_at', 'code']  # code is auto-generated
-    exclude = ['code']  # Hide code field from form
+    search_fields = ['code', 'number', 'name_ar']
+    readonly_fields = ['created_at', 'updated_at', 'code']  # code is auto-generated like Area
+    exclude = ['code']  # Hide code from form (auto-generated)
+    # 'number' field is editable by admins for Neighborhood Number
 
 
 @admin.register(LandUseType)

@@ -195,7 +195,7 @@ class ProjectIntegrationTest(TestCase):
     def test_create_project_draft(self):
         """Test creating a project as draft."""
         response = self.client.post(
-            reverse("normal_user:new-project"), 
+            reverse("normal:new-project"), 
             {**self.project_data, "action": "save"}
         )
         self.assertEqual(response.status_code, 302, "Draft creation should redirect")
@@ -209,7 +209,7 @@ class ProjectIntegrationTest(TestCase):
         data = self.project_data.copy()
         data['land_use_residential'] = False
         response = self.client.post(
-            reverse("normal_user:new-project"), 
+            reverse("normal:new-project"), 
             {**data, "action": "save"}
         )
         # Should not redirect (form invalid), should re-render form
@@ -220,7 +220,7 @@ class ProjectIntegrationTest(TestCase):
         """Test creating a project with ML estimation."""
         mock_predict.return_value = 50.0  # 50k JOD per m²
         response = self.client.post(
-            reverse("normal_user:new-project"), 
+            reverse("normal:new-project"), 
             {**self.project_data, "action": "complete"}
         )
         self.assertEqual(response.status_code, 302, "Estimation creation should redirect")

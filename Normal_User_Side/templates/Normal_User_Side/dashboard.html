@@ -88,7 +88,7 @@
 <!-- Primary Action Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
     <!-- New Project Card -->
-    <a href="{% url 'normal_user:new-project' %}">
+    <a href="{% url 'normal:new-project' %}">
         <div class="card card-glass hover:shadow-lg transition-shadow cursor-pointer"
             style="border: 1px solid var(--color-primary-200);">
             <div class="p-6 pb-4">
@@ -115,7 +115,7 @@
     </a>
 
     <!-- My Projects Card -->
-    <a href="{% url 'normal_user:projects' %}">
+    <a href="{% url 'normal:projects' %}">
         <div class="card card-glass hover:shadow-md transition-shadow cursor-pointer">
             <div class="p-6 pb-4">
                 <div class="flex items-center space-x-3">
@@ -145,69 +145,111 @@
 <!-- Recent Projects Section -->
 <div class="mb-8">
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-semibold" style="color: var(--color-text-main);">Recent Projects</h2>
+        <h2 class="text-2xl font-semibold"
+            style="color: var(--color-text-main); display: flex; align-items: center; gap: var(--spacing-2);">
+            <span style="font-size: 1.5rem;">📂</span>
+            Recent Projects
+        </h2>
+        <a href="{% url 'normal:projects' %}" class="btn btn-ghost" style="font-size: 0.875rem;">
+            View All →
+        </a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for project in recent_projects %}
         <!-- Project Card -->
-        <div class="card card-glass hover:shadow-lg transition-all"
-            style="padding: 0; overflow: hidden; position: relative;">
+        <a href="{% url 'normal:new-project' project.id %}" style="text-decoration: none;">
+            <div class="card card-glass hover:shadow-lg transition-all"
+                style="padding: 0; overflow: hidden; position: relative; cursor: pointer;">
 
-            <!-- Status Badge -->
-            <div style="position: absolute; top: var(--spacing-4); right: var(--spacing-4); z-index: 10;">
-                {% if project.status == 'COMPLETED' %}
+                <!-- Gradient Header Accent -->
                 <div
-                    style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600)); color: white; font-size: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-                    ✅ Completed
+                    style="height: 4px; background: linear-gradient(90deg, var(--color-primary-400), var(--color-primary-600));">
                 </div>
-                {% else %}
+
+                <!-- Status Badge -->
                 <div
-                    style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius-full); background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-size: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
-                    ⏳ Draft
-                </div>
-                {% endif %}
-            </div>
-
-            <!-- Card Content -->
-            <div style="padding: var(--spacing-6);">
-                <!-- Project Title -->
-                <h3 class="text-lg font-bold mb-1" style="color: var(--color-text-main); line-height: 1.3;">
-                    {{ project.project_name }}
-                </h3>
-                <p class="text-sm text-muted-foreground flex items-center">
-                    {{ project.area_m2_float|floatformat:2|intcomma }} m²
-                    {% if project.town %}, {{ project.town }}{% endif %}
-                </p>
-
-                <!-- Divider -->
-                <div style="height: 1px; background: var(--color-border); margin: var(--spacing-4) 0;"></div>
-
-                <!-- Project Details -->
-                <div class="space-y-3">
-                    {% if project.total_estimated_value %}
-                    <span class="text-sm text-muted-foreground">Estimated Value:</span>
-                    <div class="text-lg font-bold" style="color: var(--color-primary-500);">
-                        {{ project.estimated_price_float|floatformat:2|intcomma }} JOD/m² 
-
-                    </div>
-                    <span class="text-sm text-muted-foreground">Total parcel value:</span>
-                    <div class="text-lg font-bold" style="color: var(--color-primary-500);">
-                        {{ project.total_estimated_value_formatted }} JOD
+                    style="position: absolute; top: calc(var(--spacing-4) + 4px); right: var(--spacing-4); z-index: 10;">
+                    {% if project.status == 'COMPLETED' %}
+                    <div
+                        style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600)); color: white; font-size: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                        ✅ Completed
                     </div>
                     {% else %}
-                    <span class="text-sm text-muted-foreground">No estimation yet</span>
+                    <div
+                        style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius-full); background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-size: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                        ⏳ Draft
+                    </div>
                     {% endif %}
                 </div>
 
-                <!-- Timestamp -->
-                <div class="flex items-center justify-between mt-2">
-                    <span class="text-sm text-muted-foreground">{{ project.created_at|timesince }} ago</span>
+                <!-- Card Content -->
+                <div style="padding: var(--spacing-6);">
+                    <!-- Project Title -->
+                    <h3 class="text-lg font-bold mb-1"
+                        style="color: var(--color-text-main); line-height: 1.3; padding-right: 90px;">
+                        {{ project.project_name }}
+                    </h3>
+                    <p class="text-sm text-muted-foreground flex items-center" style="gap: 4px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        {{ project.area_m2_float|floatformat:0|intcomma }} m²
+                        {% if project.town %} · {{ project.town }}{% endif %}
+                    </p>
+
+                    <!-- Divider -->
+                    <div style="height: 1px; background: var(--color-border); margin: var(--spacing-4) 0;"></div>
+
+                    <!-- Project Details -->
+                    <div class="space-y-2">
+                        {% if project.total_estimated_value %}
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <span class="text-sm text-muted-foreground">Price/m²:</span>
+                            <span class="font-bold" style="color: var(--color-primary-500);">
+                                {{ project.estimated_price_float|floatformat:2|intcomma }} JOD
+                            </span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <span class="text-sm text-muted-foreground">Total Value:</span>
+                            <span class="text-lg font-bold" style="color: var(--color-primary-600);">
+                                {{ project.total_estimated_value_formatted }} JOD
+                            </span>
+                        </div>
+                        {% else %}
+                        <div
+                            style="padding: var(--spacing-3); background: var(--color-secondary-50); border-radius: var(--radius-md); text-align: center;">
+                            <span class="text-sm text-muted-foreground">No estimation yet</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Footer with Timestamp -->
+                    <div class="flex items-center justify-between"
+                        style="margin-top: var(--spacing-4); padding-top: var(--spacing-3); border-top: 1px solid var(--color-border);">
+                        <span class="text-xs text-muted-foreground"
+                            style="display: flex; align-items: center; gap: 4px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            {{ project.created_at|timesince }} ago
+                        </span>
+                        <span class="text-xs font-medium" style="color: var(--color-primary-500);">
+                            View Details →
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
         {% empty %}
-        <div class="card card-glass" style="padding: var(--spacing-6); text-align: center;">
-            <p class="text-muted-foreground">No projects yet</p>
+        <div class="card card-glass" style="padding: var(--spacing-8); text-align: center; grid-column: 1 / -1;">
+            <div style="font-size: 3rem; margin-bottom: var(--spacing-4);">📋</div>
+            <p class="text-muted-foreground mb-4">No projects yet. Start by creating your first land appraisal!</p>
+            <a href="{% url 'normal:new-project' %}" class="btn btn-primary">Create New Project</a>
         </div>
         {% endfor %}
     </div>
@@ -219,7 +261,7 @@
     <h2 class="text-2xl font-semibold mb-6" style="color: var(--color-text-main);">Quick Access</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- User Profile Card -->
-        <a href="{% url 'normal_user:profile' request.user.id %}" style="text-decoration: none;">
+        <a href="{% url 'normal:profile' request.user.id %}" style="text-decoration: none;">
             <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
                 style="padding: var(--spacing-6); position: relative; overflow: hidden;">
                 <!-- Gradient Background -->
@@ -242,7 +284,7 @@
         </a>
 
         <!-- Reports Card -->
-        <a href="{% url 'normal_user:projects' %}" style="text-decoration: none;">
+        <a href="{% url 'normal:projects' %}" style="text-decoration: none;">
             <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
                 style="padding: var(--spacing-6); position: relative; overflow: hidden;">
                 <!-- Gradient Background -->
@@ -267,7 +309,7 @@
         </a>
 
         <!-- Notifications Card -->
-        <a href="{% url 'normal_user:dashboard' %}" style="text-decoration: none;">
+        <a href="{% url 'normal:dashboard' %}" style="text-decoration: none;">
             <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
                 style="padding: var(--spacing-6); position: relative; overflow: hidden;">
                 <!-- Gradient Background -->
@@ -292,7 +334,7 @@
         </a>
 
         <!-- Help & Support Card -->
-        <a href="{% url 'normal_user:dashboard' %}" style="text-decoration: none;">
+        <a href="{% url 'normal:dashboard' %}" style="text-decoration: none;">
             <div class="card card-glass hover:shadow-lg transition-all cursor-pointer"
                 style="padding: var(--spacing-6); position: relative; overflow: hidden;">
                 <!-- Gradient Background -->

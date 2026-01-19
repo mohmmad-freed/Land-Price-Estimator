@@ -83,7 +83,8 @@ class Area(AutoCodeMixin, models.Model):
 
 class Neighborhood(AutoCodeMixin, models.Model):
     area = models.ForeignKey(Area, on_delete=models.PROTECT)
-    code = models.CharField(max_length=50, blank=True)
+    code = models.CharField(max_length=50, blank=True)  # Auto-generated like Area
+    number = models.CharField(max_length=50, blank=True)  # Admin-editable Neighborhood Number
     name_ar = models.CharField(max_length=150)
     
     # AutoCodeMixin configuration
@@ -307,7 +308,6 @@ class ProjectRoad(models.Model):
         PRIVATE_EXISTING_PAVED = 'PRIVATE_EXISTING_PAVED', 'Private Existing Paved'
         PRIVATE_PROPOSED_UNPAVED = 'PRIVATE_PROPOSED_UNPAVED', 'Private Proposed Unpaved'
         PUBLIC_PROPOSED_UNPAVED = 'PUBLIC_PROPOSED_UNPAVED', 'Public Proposed Unpaved'
-        FALSE = 'FALSE', 'No Road'
     
 
     class RoadOwnership(models.TextChoices):
@@ -353,6 +353,8 @@ class Valuation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     model = models.ForeignKey(MLModel, on_delete=models.PROTECT)
     predicted_price_per_m2 = models.DecimalField(max_digits=12, decimal_places=2)
+    user_expected_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True,
+        help_text="Appraiser's expected price as feedback for ML model")
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     deleted_at = models.DateTimeField(null=True, blank=True)
