@@ -446,7 +446,7 @@
                                 </a>
                                 <form method="POST" action="{% url 'normal:delete-project' project.id %}"
                                     onsubmit="return confirm('Are you sure you want to delete this project?');"
-                                    style="margin: 0;">
+                                    style="margin: 0;" class="space-y-1">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-secondary"
                                         style="padding: 8px 16px; font-size: 0.875rem; width: 100%; background: linear-gradient(135deg, #ef4444, #dc2626); color: white;">

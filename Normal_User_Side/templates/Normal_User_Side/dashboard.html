@@ -29,7 +29,16 @@
         </div>
     </div>
 </div>
-
+<!--  Message if exists -->
+<div class="container mb-6">
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <p class="success-message text-center">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
 <!-- Stats Overview -->
 <div class="mb-8">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

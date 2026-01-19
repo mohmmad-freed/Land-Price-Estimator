@@ -223,8 +223,7 @@ class ProjectForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Filter out soft-deleted neighborhoods
         self.fields['neighborhood'].queryset = Neighborhood.objects.filter(deleted_at__isnull=True)
-        # Make neighborhood_no not required
-        self.fields['neighborhood_no'].required = False
+        
         
     def clean_area_m2(self):
         area = self.cleaned_data.get('area_m2')
