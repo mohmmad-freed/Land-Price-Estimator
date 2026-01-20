@@ -1,0 +1,191 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .filter-form {
+        display: flex;
+        gap: var(--spacing-4);
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .filter-select {
+        min-width: 200px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-2);
+        margin-top: var(--spacing-6);
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: var(--spacing-2) var(--spacing-4);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .pagination a {
+        background: var(--color-card);
+        color: var(--color-text-main);
+        border: 1px solid var(--color-border);
+    }
+
+    .pagination a:hover {
+        background: var(--color-primary-100);
+        border-color: var(--color-primary-500);
+    }
+
+    .pagination .current {
+        background: var(--color-primary-500);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Valuations - Data Scientist Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Page Header -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 900px; margin: 0 auto;">
+            <div class="text-center">
+                <span style="font-size: 2rem;">📊</span>
+                <h1 class="text-3xl font-bold mb-2"
+                    style="color: var(--color-text-main); margin-top: var(--spacing-2);">Valuation History</h1>
+                <p class="text-muted-foreground">All land price predictions made by the ML models</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="container mb-6" style="max-width: 1200px; margin: 0 auto;">
+    <div class="card card-glass" style="padding: var(--spacing-4);">
+        <form method="GET" class="filter-form">
+            <label class="text-sm font-semibold" style="color: var(--color-text-main);">Filter by Model:</label>
+            <select name="model" class="form-input filter-select" onchange="this.form.submit()">
+                <option value="">All Models</option>
+                {% for model in models %}
+                <option value="{{ model.id }}" {% if model_filter == model.id|stringformat:"i" %}selected{% endif %}>
+                    {{ model.name }} v{{ model.version }}
+                </option>
+                {% endfor %}
+            </select>
+            <span class="text-sm text-muted-foreground">
+                Showing {{ total_count }} valuation{% if total_count != 1 %}s{% endif %}
+            </span>
+        </form>
+    </div>
+</div>
+
+<!-- Valuations Table -->
+<div class="container" style="max-width: 1200px; margin: 0 auto;">
+    {% if page_obj %}
+    <div class="card card-glass" style="padding: var(--spacing-6); overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--color-border);">
+                    <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">Project</th>
+                    <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">Model Used
+                    </th>
+                    <th style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main);">Predicted
+                        Price</th>
+                    <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">Appraiser
+                    </th>
+                    <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for valuation in page_obj %}
+                <tr style="border-bottom: 1px solid var(--color-border);">
+                    <td style="padding: var(--spacing-3);">
+                        <span class="font-semibold" style="color: var(--color-text-main);">
+                            {{ valuation.project.project_name }}
+                        </span>
+                        <br>
+                        <span class="text-sm text-muted-foreground">
+                            {{ valuation.project.neighborhood.name_ar }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3);">
+                        <span
+                            style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: var(--radius-md); background: var(--color-primary-100); color: var(--color-primary-700); font-size: 0.75rem;">
+                            {{ valuation.model.name }} v{{ valuation.model.version }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3); text-align: right;">
+                        <span class="font-bold" style="color: var(--color-primary-600);">
+                            {{ valuation.predicted_price_per_m2|floatformat:2 }} JOD/m²
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3);">
+                        <span class="text-muted-foreground">
+                            {{ valuation.created_by.name|default:valuation.created_by.email }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3);">
+                        <span class="text-muted-foreground">
+                            {{ valuation.created_at|date:"M d, Y" }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: var(--spacing-8); text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: var(--spacing-4);">📭</div>
+                        <p class="text-muted-foreground">No valuations found</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if model_filter %}&model={{ model_filter }}{% endif %}">First</a>
+        <a
+            href="?page={{ page_obj.previous_page_number }}{% if model_filter %}&model={{ model_filter }}{% endif %}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a
+            href="?page={{ page_obj.next_page_number }}{% if model_filter %}&model={{ model_filter }}{% endif %}">Next</a>
+        <a
+            href="?page={{ page_obj.paginator.num_pages }}{% if model_filter %}&model={{ model_filter }}{% endif %}">Last</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% else %}
+    <!-- Empty State -->
+    <div class="card card-glass" style="padding: var(--spacing-12); text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: var(--spacing-4);">📊</div>
+        <h3 class="text-xl font-bold mb-2" style="color: var(--color-text-main);">No Valuations Yet</h3>
+        <p class="text-muted-foreground">Valuations will appear here once users make predictions</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

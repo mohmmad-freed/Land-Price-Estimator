@@ -1,0 +1,481 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+{% block title %}Statistics & Analytics - Data Scientist{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Hero Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 800px; margin: 0 auto;">
+            <div class="text-center">
+                <span style="font-size: 2rem;">📊</span>
+                <h1 class="text-3xl font-bold mb-2"
+                    style="color: var(--color-text-main); margin-top: var(--spacing-2);">Statistics & Analytics</h1>
+                <p class="text-muted-foreground">Model performance insights and feedback analysis</p>
+                {% if active_model %}
+                <div
+                    style="margin-top: var(--spacing-4); padding: var(--spacing-2) var(--spacing-4); background: var(--color-primary-100); border-radius: var(--radius-md); display: inline-block;">
+                    <span style="color: var(--color-primary-700); font-weight: 500;">📌 Active Model: 
+                        {{active_model.name }} v{{ active_model.version }}</span>
+                </div>
+                {% else %}
+                <div
+                    style="margin-top: var(--spacing-4); padding: var(--spacing-2) var(--spacing-4); background: var(--color-warning-100); border-radius: var(--radius-md); display: inline-block;">
+                    <span style="color: var(--color-warning-700); font-weight: 500;">⚠️ No active model set - showing
+                        all valuations</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Total Valuations -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #4f46e5); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Total Valuations</p>
+                    <h3 class="text-3xl font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ total_valuations }}</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📈</div>
+            </div>
+        </div>
+
+        <!-- Feedback Rate -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Feedback Rate</p>
+                    <h3 class="text-3xl font-bold"
+                        style="color: var(--color-primary-500); margin-top: var(--spacing-1);">{{ feedback_rate }}%</h3>
+                    <p class="text-xs text-muted-foreground">{{ valuations_with_feedback }} with feedback</p>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">💬</div>
+            </div>
+        </div>
+
+        <!-- Model Accuracy -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Model Accuracy</p>
+                    {% if accuracy_score is not None %}
+                    <h3 class="text-3xl font-bold"
+                        style="color: {% if accuracy_score >= 80 %}var(--color-primary-500){% elif accuracy_score >= 60 %}#f59e0b{% else %}#ef4444{% endif %}; margin-top: var(--spacing-1);">
+                        {{ accuracy_score }}%</h3>
+                    <p class="text-xs text-muted-foreground">Based on {{ feedback_count }} feedbacks</p>
+                    {% else %}
+                    <h3 class="text-2xl font-bold"
+                        style="color: var(--color-text-muted); margin-top: var(--spacing-1);">N/A</h3>
+                    <p class="text-xs text-muted-foreground">Needs feedback data</p>
+                    {% endif %}
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">🎯</div>
+            </div>
+        </div>
+
+        <!-- Mean Absolute Error -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #ec4899, #db2777); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Avg. Deviation</p>
+                    {% if feedback_count > 0 %}
+                    <h3 class="text-3xl font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ avg_deviation }}%</h3>
+                    <p class="text-xs text-muted-foreground">MAE: {{ mae }} JOD/m²</p>
+                    {% else %}
+                    <h3 class="text-2xl font-bold"
+                        style="color: var(--color-text-muted); margin-top: var(--spacing-1);">N/A</h3>
+                    <p class="text-xs text-muted-foreground">Needs feedback data</p>
+                    {% endif %}
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📐</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row 1 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Valuations Over Time Chart -->
+    <div class="card card-glass" style="padding: var(--spacing-6);">
+        <h3 class="text-xl font-semibold mb-4"
+            style="color: var(--color-text-main); display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.25rem;">📅</span> Valuations Over Time
+        </h3>
+        <div style="height: 300px; position: relative;">
+            <canvas id="valuationsTimeChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Predicted vs Expected Chart -->
+    <div class="card card-glass" style="padding: var(--spacing-6);">
+        <h3 class="text-xl font-semibold mb-4"
+            style="color: var(--color-text-main); display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.25rem;">⚖️</span> Predicted vs Expected Prices
+        </h3>
+        <div style="height: 300px; position: relative;">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+        {% if feedback_count == 0 %}
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+            <p class="text-muted-foreground">No feedback data available yet</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Charts Row 2 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Geographic Distribution -->
+    <div class="card card-glass" style="padding: var(--spacing-6);">
+        <h3 class="text-xl font-semibold mb-4"
+            style="color: var(--color-text-main); display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.25rem;">🗺️</span> Geographic Distribution
+        </h3>
+        <div style="height: 300px; position: relative; display: flex; align-items: center; justify-content: center;">
+            <canvas id="geoChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Model Performance Comparison -->
+    <div class="card card-glass" style="padding: var(--spacing-6);">
+        <h3 class="text-xl font-semibold mb-4"
+            style="color: var(--color-text-main); display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.25rem;">🤖</span> Model Performance
+        </h3>
+        <div style="height: 300px; position: relative;">
+            <canvas id="modelChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Feedback Table -->
+<div class="card card-glass" style="padding: var(--spacing-6); margin-bottom: var(--spacing-8);">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold"
+            style="color: var(--color-text-main); display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.25rem;">💬</span> Recent Appraiser Feedback
+        </h3>
+        <a href="{% url 'data_scientist:valuation_list' %}" class="text-sm"
+            style="color: var(--color-primary-500); text-decoration: none;">View All →</a>
+    </div>
+
+    {% if recent_feedback %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--color-border);">
+                    <th
+                        style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                        Project</th>
+                    <th
+                        style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                        Model</th>
+                    <th
+                        style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                        Predicted</th>
+                    <th
+                        style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                        Expected</th>
+                    <th
+                        style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                        Deviation</th>
+                    <th
+                        style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                        Appraiser</th>
+                    <th
+                        style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                        Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in recent_feedback %}
+                <tr style="border-bottom: 1px solid var(--color-border); transition: background 0.2s;"
+                    onmouseover="this.style.background='var(--color-muted)'"
+                    onmouseout="this.style.background='transparent'">
+                    <td style="padding: var(--spacing-3);">
+                        <span class="font-semibold" style="color: var(--color-text-main);">
+                            {{ feedback.project.project_name|truncatewords:3 }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3);">
+                        <span
+                            style="display: inline-flex; padding: 2px 8px; border-radius: var(--radius-md); background: var(--color-primary-100); color: var(--color-primary-700); font-size: 0.75rem;">
+                            {{ feedback.model.name }} v{{ feedback.model.version }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3); text-align: right;">
+                        <span class="font-bold" style="color: var(--color-primary-600);">
+                            {{ feedback.predicted_price_per_m2|floatformat:2 }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3); text-align: right;">
+                        <span class="font-bold" style="color: #10b981;">
+                            {{ feedback.user_expected_price|floatformat:2 }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3); text-align: right;">
+                        <span class="deviation-value" data-predicted="{{ feedback.predicted_price_per_m2 }}"
+                            data-expected="{{ feedback.user_expected_price }}" style="font-weight: 600;">
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3);">
+                        <span class="text-muted-foreground text-sm">
+                            {{ feedback.created_by.name|default:feedback.created_by.email|truncatechars:15 }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-3);">
+                        <span class="text-muted-foreground text-sm">
+                            {{ feedback.created_at|date:"M d, Y" }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding: var(--spacing-8); text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: var(--spacing-4);">📭</div>
+        <p class="text-muted-foreground">No feedback from appraisers yet.</p>
+        <p class="text-sm text-muted-foreground mt-2">Feedback appears when appraisers provide their expected prices
+            during valuations.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+    // Parse Django template data
+    const chartDates = {{ chart_dates_json|default:"[]" | safe }};
+    const chartCounts = {{ chart_counts_json|default:"[]" | safe }};
+    const geoLabels = {{ geo_labels_json|default:"[]" | safe }};
+    const geoData = {{ geo_data_json|default:"[]" | safe }};
+    const modelNames = {{ model_names_json|default:"[]" | safe }};
+    const modelValuationCounts = {{ model_valuation_counts_json|default:"[]" | safe }};
+    const modelFeedbackCounts = {{ model_feedback_counts_json|default:"[]" | safe }};
+    const comparisonLabels = {{ comparison_labels_json|default:"[]" | safe }};
+    const predictedValues = {{ predicted_values_json|default:"[]" | safe }};
+    const expectedValues = {{ expected_values_json|default:"[]" | safe }};
+
+    // Chart colors with gradients
+    const primaryColor = 'rgb(99, 102, 241)';
+    const primaryColorLight = 'rgba(99, 102, 241, 0.2)';
+    const successColor = 'rgb(16, 185, 129)';
+    const successColorLight = 'rgba(16, 185, 129, 0.2)';
+    const warningColor = 'rgb(245, 158, 11)';
+
+    // Common chart options
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    font: { family: "'Inter', sans-serif", size: 12 },
+                    color: 'rgb(156, 163, 175)'
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: { color: 'rgba(156, 163, 175, 0.1)' },
+                ticks: { color: 'rgb(156, 163, 175)', font: { size: 10 } }
+            },
+            y: {
+                grid: { color: 'rgba(156, 163, 175, 0.1)' },
+                ticks: { color: 'rgb(156, 163, 175)', font: { size: 10 } }
+            }
+        }
+    };
+
+    // 1. Valuations Over Time (Line Chart)
+    const timeCtx = document.getElementById('valuationsTimeChart').getContext('2d');
+    const timeGradient = timeCtx.createLinearGradient(0, 0, 0, 300);
+    timeGradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+    timeGradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
+
+    new Chart(timeCtx, {
+        type: 'line',
+        data: {
+            labels: chartDates,
+            datasets: [{
+                label: 'Valuations',
+                data: chartCounts,
+                borderColor: primaryColor,
+                backgroundColor: timeGradient,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false }
+            }
+        }
+    });
+
+    // 2. Predicted vs Expected (Bar Chart)
+    if (comparisonLabels.length > 0) {
+        new Chart(document.getElementById('comparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: comparisonLabels,
+                datasets: [
+                    {
+                        label: 'Predicted (JOD/m²)',
+                        data: predictedValues,
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderColor: primaryColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Expected (JOD/m²)',
+                        data: expectedValues,
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderColor: successColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    ...commonOptions.scales,
+                    x: {
+                        ...commonOptions.scales.x,
+                        ticks: { ...commonOptions.scales.x.ticks, maxRotation: 45 }
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. Geographic Distribution (Doughnut Chart)
+    if (geoLabels.length > 0) {
+        const geoColors = [
+            'rgba(99, 102, 241, 0.8)',
+            'rgba(16, 185, 129, 0.8)',
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(236, 72, 153, 0.8)',
+            'rgba(139, 92, 246, 0.8)',
+            'rgba(20, 184, 166, 0.8)',
+            'rgba(249, 115, 22, 0.8)',
+            'rgba(168, 85, 247, 0.8)'
+        ];
+
+        new Chart(document.getElementById('geoChart'), {
+            type: 'doughnut',
+            data: {
+                labels: geoLabels,
+                datasets: [{
+                    data: geoData,
+                    backgroundColor: geoColors,
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: { family: "'Inter', sans-serif", size: 11 },
+                            color: 'rgb(156, 163, 175)',
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 4. Model Performance (Horizontal Bar Chart)
+    if (modelNames.length > 0) {
+        new Chart(document.getElementById('modelChart'), {
+            type: 'bar',
+            data: {
+                labels: modelNames,
+                datasets: [
+                    {
+                        label: 'Total Valuations',
+                        data: modelValuationCounts,
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'With Feedback',
+                        data: modelFeedbackCounts,
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                indexAxis: 'y',
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // Calculate and display deviation values
+    document.querySelectorAll('.deviation-value').forEach(function (span) {
+        const predicted = parseFloat(span.dataset.predicted);
+        const expected = parseFloat(span.dataset.expected);
+
+        if (!isNaN(predicted) && !isNaN(expected) && expected !== 0) {
+            const deviation = ((predicted - expected) / expected) * 100;
+            const sign = deviation > 0 ? '+' : '';
+            const color = deviation > 0 ? '#f59e0b' : '#10b981';
+
+            span.style.color = color;
+            span.textContent = sign + deviation.toFixed(1) + '%';
+        } else {
+            span.textContent = 'N/A';
+            span.style.color = 'var(--color-text-muted)';
+        }
+    });
+</script>
+{% endblock %}

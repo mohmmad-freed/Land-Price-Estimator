@@ -10,7 +10,10 @@ def loginPage(request):
     
     if request.user.is_authenticated:
         user = request.user
-        if user.type == 'normal':
+        # Superuser check - redirect to Django admin
+        if user.is_superuser:
+            return redirect('/admin/')
+        elif user.type == 'normal':
             return redirect('normal:home')
         elif user.type in ('scientist', 'data_scientist'):
             return redirect('data_scientist:home')
@@ -31,8 +34,11 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-                
-            if user.type == 'normal':
+            
+            # Superuser check - redirect to Django admin
+            if user.is_superuser:
+                return redirect('/admin/')
+            elif user.type == 'normal':
                 return redirect('normal:home')
             elif user.type in ('scientist', 'data_scientist'):
                 return redirect('data_scientist:home')

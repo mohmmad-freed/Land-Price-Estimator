@@ -13,4 +13,8 @@ urlpatterns = [
     path('models/upload/', views.model_upload, name='model_upload'),
     path('models/<int:model_id>/', views.model_detail, name='model_detail'),
     path('models/<int:model_id>/activate/', views.model_activate, name='model_activate'),
+    # Valuation History
+    path('valuations/', views.valuation_list, name='valuation_list'),
+    # Statistics & Analytics
+    path('statistics/', views.statistics, name='statistics'),
 ]

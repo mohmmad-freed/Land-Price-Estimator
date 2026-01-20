@@ -176,6 +176,67 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+
+        <!-- Recent Valuations Section -->
+        <div class="container mt-8" style="max-width: 900px; margin: 0 auto; margin-top: var(--spacing-8);">
+            <h2 class="text-xl font-semibold mb-4" style="color: var(--color-text-main);">Recent Valuations Using This
+                Model</h2>
+
+            {% if recent_valuations %}
+            <div class="card card-glass" style="padding: var(--spacing-4); overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--color-border);">
+                            <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">
+                                Project</th>
+                            <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">
+                                Location</th>
+                            <th style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main);">
+                                Predicted Price</th>
+                            <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">
+                                Appraiser</th>
+                            <th style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main);">Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for valuation in recent_valuations %}
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: var(--spacing-3);">
+                                <span class="font-semibold" style="color: var(--color-text-main);">
+                                    {{ valuation.project.project_name|truncatewords:4 }}
+                                </span>
+                            </td>
+                            <td style="padding: var(--spacing-3);">
+                                <span class="text-sm text-muted-foreground">
+                                    {{ valuation.project.neighborhood.name_ar }}
+                                </span>
+                            </td>
+                            <td style="padding: var(--spacing-3); text-align: right;">
+                                <span class="font-bold" style="color: var(--color-primary-600);">
+                                    {{ valuation.predicted_price_per_m2|floatformat:2 }} JOD/m²
+                                </span>
+                            </td>
+                            <td style="padding: var(--spacing-3);">
+                                <span class="text-muted-foreground text-sm">
+                                    {{ valuation.created_by.name|default:valuation.created_by.email }}
+                                </span>
+                            </td>
+                            <td style="padding: var(--spacing-3);">
+                                <span class="text-muted-foreground text-sm">
+                                    {{ valuation.created_at|date:"M d, Y" }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card card-glass" style="padding: var(--spacing-8); text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: var(--spacing-2);">📭</div>
+                <p class="text-muted-foreground">No valuations have been made with this model yet.</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endblock %}
