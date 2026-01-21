@@ -1,0 +1,255 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Test Results - {{ model.name }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Page Header Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 1000px; margin: 0 auto;">
+            <div class="flex items-center gap-6">
+                <!-- Success Icon -->
+                <div
+                    style="width: 80px; height: 80px; border-radius: var(--radius-xl); background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+                <!-- Info -->
+                <div style="flex: 1;">
+                    <h1 class="text-2xl font-bold" style="color: var(--color-text-main);">
+                        Test Results</h1>
+                    <p class="text-lg text-muted-foreground">{{ model.name }} v{{ model.version }}</p>
+                </div>
+                <!-- Actions -->
+                <div style="display: flex; gap: var(--spacing-2);">
+                    <a href="{% url 'data_scientist:download_test_results' %}" class="btn btn-primary"
+                        style="display: inline-flex; align-items: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Download CSV
+                    </a>
+                    <a href="{% url 'data_scientist:model_test' model.id %}" class="btn btn-secondary">
+                        Test Again
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Metrics Cards -->
+<div class="container mb-8" style="max-width: 1000px; margin: 0 auto;">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Sample Count -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #4f46e5); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Test Samples</p>
+                    <h3 class="text-3xl font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ sample_count }}</h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📊</div>
+            </div>
+        </div>
+
+        <!-- MAE -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Mean Absolute Error</p>
+                    <h3 class="text-2xl font-bold" style="color: var(--color-text-main); margin-top: var(--spacing-1);">
+                        {{ mae }} <span class="text-sm font-normal text-muted-foreground">JOD/m²</span></h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">📐</div>
+            </div>
+        </div>
+
+        <!-- R² Score -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">R² Score</p>
+                    <h3 class="text-3xl font-bold"
+                        style="color: {% if r2 >= 0.8 %}var(--color-primary-500){% elif r2 >= 0.6 %}#f59e0b{% else %}#ef4444{% endif %}; margin-top: var(--spacing-1);">
+                        {{ r2 }}</h3>
+                    <p class="text-xs text-muted-foreground">{{ r2_percent }}% variance explained</p>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">🎯</div>
+            </div>
+        </div>
+
+        <!-- Model Accuracy -->
+        <div class="card card-glass" style="padding: var(--spacing-6); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #ec4899, #db2777); opacity: 0.15; border-radius: 50%;">
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Model Quality</p>
+                    <h3 class="text-2xl font-bold" style="margin-top: var(--spacing-1);">
+                        {% if r2 >= 0.9 %}
+                        <span style="color: #10b981;">Excellent</span>
+                        {% elif r2 >= 0.8 %}
+                        <span style="color: #10b981;">Good</span>
+                        {% elif r2 >= 0.6 %}
+                        <span style="color: #f59e0b;">Fair</span>
+                        {% else %}
+                        <span style="color: #ef4444;">Needs Work</span>
+                        {% endif %}
+                    </h3>
+                </div>
+                <div style="font-size: 2rem; opacity: 0.5;">
+                    {% if r2 >= 0.8 %}✅{% elif r2 >= 0.6 %}⚠️{% else %}❌{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Table -->
+<div class="container" style="max-width: 1000px; margin: 0 auto;">
+    <div class="card card-glass" style="padding: var(--spacing-6); border-radius: var(--radius-xl);">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold" style="color: var(--color-text-main);">
+                <span style="margin-right: 8px;">📋</span> Prediction Results
+            </h3>
+            {% if has_more %}
+            <span class="text-sm text-muted-foreground">
+                Showing {{ display_count }} of {{ sample_count }} rows (download for full results)
+            </span>
+            {% endif %}
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border);">
+                        <th
+                            style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                            #</th>
+                        <th
+                            style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                            Area</th>
+                        <th
+                            style="padding: var(--spacing-3); text-align: left; color: var(--color-text-main); font-weight: 600;">
+                            Neighborhood</th>
+                        <th
+                            style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                            Size (m²)</th>
+                        <th
+                            style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                            Actual</th>
+                        <th
+                            style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                            Predicted</th>
+                        <th
+                            style="padding: var(--spacing-3); text-align: right; color: var(--color-text-main); font-weight: 600;">
+                            Deviation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr style="border-bottom: 1px solid var(--color-border); transition: background 0.2s;"
+                        onmouseover="this.style.background='var(--color-muted)'"
+                        onmouseout="this.style.background='transparent'">
+                        <td style="padding: var(--spacing-3); color: var(--color-text-muted);">{{ result.row_num }}</td>
+                        <td style="padding: var(--spacing-3);">
+                            <span class="font-medium" style="color: var(--color-text-main);">
+                                {{result.area|truncatechars:20 }}</span>
+                        </td>
+                        <td style="padding: var(--spacing-3);">
+                            <span class="text-muted-foreground">{{ result.neighborhood|truncatechars:20 }}</span>
+                        </td>
+                        <td style="padding: var(--spacing-3); text-align: right;">
+                            <span class="text-muted-foreground">{{ result.area_m2 }}</span>
+                        </td>
+                        <td style="padding: var(--spacing-3); text-align: right;">
+                            <span class="font-bold" style="color: #10b981;">{{ result.actual }}</span>
+                        </td>
+                        <td style="padding: var(--spacing-3); text-align: right;">
+                            <span class="font-bold" style="color: var(--color-primary-600);">
+                                {{ result.predicted}}</span>
+                        </td>
+                        <td style="padding: var(--spacing-3); text-align: right;">
+                            <span class="font-semibold"
+                                style="color: {% if result.deviation_percent > 0 %}#f59e0b{% else %}#10b981{% endif %};">
+                                {% if result.deviation_percent > 0 %}+{% endif %}{{ result.deviation_percent }}%
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="padding: var(--spacing-8); text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: var(--spacing-4);">📭</div>
+                            <p class="text-muted-foreground">No results to display</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Legend -->
+        <div
+            style="margin-top: var(--spacing-6); padding: var(--spacing-4); background: var(--color-muted); border-radius: var(--radius-lg);">
+            <div style="display: flex; gap: var(--spacing-6); flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #10b981;"></span>
+                    <span class="text-sm text-muted-foreground">Actual Price</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span
+                        style="width: 12px; height: 12px; border-radius: 50%; background: var(--color-primary-600);"></span>
+                    <span class="text-sm text-muted-foreground">Predicted Price</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #f59e0b;"></span>
+                    <span class="text-sm text-muted-foreground">Over-prediction</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #10b981;"></span>
+                    <span class="text-sm text-muted-foreground">Under-prediction</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--spacing-4); margin-top: var(--spacing-6); justify-content: center;">
+        <a href="{% url 'data_scientist:model_detail' model.id %}" class="btn btn-secondary">
+            ← Back to Model Details
+        </a>
+        <a href="{% url 'data_scientist:model_list' %}" class="btn btn-secondary">
+            View All Models
+        </a>
+    </div>
+</div>
+{% endblock %}

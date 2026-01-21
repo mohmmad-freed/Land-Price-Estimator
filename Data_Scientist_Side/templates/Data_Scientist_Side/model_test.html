@@ -1,0 +1,186 @@
+{% extends 'Data_Scientist_Side/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Test Model - {{ model.name }}{% endblock %}
+
+{% block content %}
+<!-- Error Messages -->
+{% if messages %}
+<div class="container mb-4" style="max-width: 900px; margin: 0 auto;">
+    {% for message in messages %}
+    <div class="p-4 rounded-lg mb-2"
+        style="background: rgba(239, 68, 68, 0.1); border: 1px solid var(--color-danger); color: var(--color-danger);">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Hero Section with Gradient Blobs -->
+<div class="bg-background"
+    style="position: relative; overflow: hidden; padding: var(--spacing-8) 0; margin: calc(var(--spacing-8) * -1) calc(var(--spacing-4) * -1) var(--spacing-8);">
+    <!-- Gradient Blobs -->
+    <div
+        style="position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: var(--blob-gradient-1); opacity: 0.4; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--blob-gradient-2); opacity: 0.4; z-index: -1;">
+    </div>
+
+    <!-- Page Header Card -->
+    <div class="container">
+        <div class="card card-glass"
+            style="padding: var(--spacing-8); border-radius: var(--radius-xl); max-width: 900px; margin: 0 auto;">
+            <div class="flex items-center gap-6">
+                <!-- Model Icon -->
+                <div
+                    style="width: 80px; height: 80px; border-radius: var(--radius-xl); background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <path d="m9 15 2 2 4-4" />
+                    </svg>
+                </div>
+                <!-- Info -->
+                <div style="flex: 1;">
+                    <h1 class="text-2xl font-bold" style="color: var(--color-text-main);">
+                        Test Model</h1>
+                    <p class="text-lg text-muted-foreground">{{ model.name }} v{{ model.version }}</p>
+                </div>
+                <!-- Back Button -->
+                <a href="{% url 'data_scientist:model_detail' model.id %}" class="btn btn-secondary">
+                    ← Back to Model
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Form -->
+<div class="container" style="max-width: 900px; margin: 0 auto;">
+    <div class="card card-glass"
+        style="padding: var(--spacing-8); border-radius: var(--radius-xl); margin-bottom: var(--spacing-6);">
+        <h2 class="text-xl font-semibold mb-6" style="color: var(--color-text-main);">
+            <span style="margin-right: 8px;">📊</span> Upload Test Dataset
+        </h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- File Upload Area -->
+            <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: var(--spacing-2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="color: var(--color-primary-500);">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Test Dataset File *
+                </label>
+                <div
+                    style="border: 2px dashed var(--color-border); border-radius: var(--radius-lg); padding: var(--spacing-8); text-align: center; background: var(--color-primary-50);">
+                    <div style="font-size: 3rem; margin-bottom: var(--spacing-4);">📁</div>
+                    <input type="file" name="test_file" accept=".csv,.xlsx,.xls" class="form-input"
+                        style="display: block; width: 100%; max-width: 400px; margin: 0 auto; cursor: pointer;"
+                        required />
+                    <p class="text-sm text-muted-foreground mt-4">
+                        Upload a CSV (comma or semicolon-separated) or Excel file (max 10MB)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="margin-top: var(--spacing-6);">
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: var(--spacing-4);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="margin-right: 8px;">
+                        <path d="m9 15 2 2 4-4" />
+                        <path
+                            d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                    </svg>
+                    Run Model Test
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Required Columns Info -->
+    <div class="card card-glass" style="padding: var(--spacing-6); border-radius: var(--radius-xl);">
+        <h3 class="text-lg font-semibold mb-4" style="color: var(--color-text-main);">
+            <span style="margin-right: 8px;">📋</span> Expected File Format
+        </h3>
+        <p class="text-muted-foreground mb-4">
+            Your test file should contain columns matching your project data. The system will automatically transform
+            the data
+            to match the ML model's expected format. The
+            <code
+                style="background: var(--color-primary-100); padding: 2px 6px; border-radius: 4px;">actual_price_per_m2</code>
+            column is required for evaluation.
+        </p>
+
+        <!-- Key Columns -->
+        <div style="margin-bottom: var(--spacing-4);">
+            <h4 class="font-semibold mb-2" style="color: var(--color-text-main);">Required Columns:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-2);">
+                <span
+                    style="padding: 4px 10px; background: var(--color-primary-100); border-radius: var(--radius-md); font-size: 0.875rem; font-family: monospace;">Area</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-primary-100); border-radius: var(--radius-md); font-size: 0.875rem; font-family: monospace;">Neighborhood</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-primary-100); border-radius: var(--radius-md); font-size: 0.875rem; font-family: monospace;">area_m2</span>
+                <span
+                    style="padding: 4px 10px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1)); border: 1px solid var(--color-primary-500); border-radius: var(--radius-md); font-size: 0.875rem; font-family: monospace; font-weight: 600;">actual_price_per_m2</span>
+            </div>
+        </div>
+
+        <!-- Optional Columns -->
+        <div style="margin-bottom: var(--spacing-4);">
+            <h4 class="font-semibold mb-2" style="color: var(--color-text-main);">Other Columns (auto-processed):</h4>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--spacing-2);">
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">political_classification</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">slope</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">view_quality</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">parcel_shape</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">electricity</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">water</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">Sewage</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">road_status1/2/3</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">width_m
+                    (×3)</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">land_use_*</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">*_facility</span>
+                <span
+                    style="padding: 4px 10px; background: var(--color-muted); border-radius: var(--radius-md); font-size: 0.75rem; font-family: monospace;">FACTORIES_NEARBY</span>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div style="padding: var(--spacing-4); background: var(--color-primary-50); border-radius: var(--radius-lg);">
+            <h4 class="font-semibold mb-2" style="color: var(--color-text-main);">💡 Auto-Processing Features</h4>
+            <ul class="text-sm text-muted-foreground"
+                style="list-style: disc; padding-left: var(--spacing-6); line-height: 1.8;">
+                <li><strong>Delimiter:</strong> Automatically detects comma (,) or semicolon (;) separators</li>
+                <li><strong>Slope values:</strong> Converts "Flat (0-5%)" → FLAT, "Mild (5-15%)" → MILD, etc.</li>
+                <li><strong>Boolean columns:</strong> Accepts TRUE/FALSE, YES/NO, or 1/0</li>
+                <li><strong>Road widths:</strong> Handles multiple width_m columns automatically</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

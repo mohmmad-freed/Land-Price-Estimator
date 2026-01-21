@@ -45,8 +45,17 @@
                 </div>
                 <!-- Actions -->
                 <div style="display: flex; gap: var(--spacing-2);">
+                    <a href="{% url 'data_scientist:model_test' model.id %}" class="btn btn-primary"
+                        style="display: inline-flex; align-items: center; gap: 6px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 15 2 2 4-4" />
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                        </svg>
+                        Test Model
+                    </a>
                     {% if not is_active %}
-                    <a href="{% url 'data_scientist:model_activate' model.id %}" class="btn btn-primary">
+                    <a href="{% url 'data_scientist:model_activate' model.id %}" class="btn btn-secondary">
                         Set as Active
                     </a>
                     {% endif %}

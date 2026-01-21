@@ -195,7 +195,7 @@ class ProjectIntegrationTest(TestCase):
     def test_create_project_draft(self):
         """Test creating a project as draft."""
         response = self.client.post(
-            reverse("normal:new-project"), 
+            reverse("normal_user:new-project"), 
             {**self.project_data, "action": "save"}
         )
         self.assertEqual(response.status_code, 302, "Draft creation should redirect")

@@ -38,3 +38,30 @@ class MLModelUploadForm(forms.ModelForm):
             if file.size > 50 * 1024 * 1024:
                 raise forms.ValidationError("File size must be under 50MB.")
         return file
+
+
+class ModelTestForm(forms.Form):
+    """Form for uploading test dataset to evaluate ML model."""
+    test_file = forms.FileField(
+        label="Test Dataset (CSV/Excel)",
+        help_text="Upload a file containing feature columns and actual_price_per_m2 for evaluation",
+        widget=forms.FileInput(attrs={
+            'class': 'form-input',
+            'accept': '.csv,.xlsx,.xls'
+        })
+    )
+
+    def clean_test_file(self):
+        file = self.cleaned_data.get('test_file')
+        if file:
+            # Validate extension
+            valid_extensions = ['.csv', '.xlsx', '.xls']
+            ext = '.' + file.name.split('.')[-1].lower()
+            if ext not in valid_extensions:
+                raise forms.ValidationError(
+                    "Invalid file format. Please upload a CSV or Excel file."
+                )
+            # Max 10MB
+            if file.size > 10 * 1024 * 1024:
+                raise forms.ValidationError("File size must be under 10MB.")
+        return file

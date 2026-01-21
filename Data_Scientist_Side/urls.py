@@ -13,6 +13,9 @@ urlpatterns = [
     path('models/upload/', views.model_upload, name='model_upload'),
     path('models/<int:model_id>/', views.model_detail, name='model_detail'),
     path('models/<int:model_id>/activate/', views.model_activate, name='model_activate'),
+    path('models/<int:model_id>/test/', views.model_test, name='model_test'),
+    # Model Testing Results
+    path('download-results/', views.download_test_results, name='download_test_results'),
     # Valuation History
     path('valuations/', views.valuation_list, name='valuation_list'),
     # Statistics & Analytics
