@@ -41,11 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core.apps.CoreConfig',
-    'Normal_User_Side.apps.NormalUserSideConfig',
-    'Data_Scientist_Side.apps.DataScientistSideConfig',
-    'Admin_Side.apps.AdminSideConfig',
-    'Users_Handling_App.apps.UsersHandlingAppConfig',
+    'Apps.core.apps.CoreConfig',
+    'Apps.Normal_User_Side.apps.NormalUserSideConfig',
+    'Apps.Data_Scientist_Side.apps.DataScientistSideConfig',
+    'Apps.Admin_Side.apps.AdminSideConfig',
+    'Apps.Users_Handling_App.apps.UsersHandlingAppConfig',
     'django.contrib.humanize',
 ]
 

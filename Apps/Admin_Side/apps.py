@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsersHandlingAppConfig(AppConfig):
+class AdminSideConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'Users_Handling_App'
+    name = 'Apps.Admin_Side'
