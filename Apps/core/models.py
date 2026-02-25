@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
-from core.mixins import AutoCodeMixin
+from Apps.core.mixins import AutoCodeMixin
 
 
 class Governorate(AutoCodeMixin, models.Model):

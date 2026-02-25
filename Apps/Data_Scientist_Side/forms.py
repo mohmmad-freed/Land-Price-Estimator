@@ -1,5 +1,5 @@
 from django import forms
-from core.models import MLModel
+from Apps.core.models import MLModel
 
 
 class MLModelUploadForm(forms.ModelForm):

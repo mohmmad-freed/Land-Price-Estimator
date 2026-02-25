@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from unittest.mock import patch
-from core.models import Project, Governorate, Town, Area, Neighborhood
+from Apps.core.models import Project, Governorate, Town, Area, Neighborhood
 from django.contrib.auth import get_user_model
 User = get_user_model()
 

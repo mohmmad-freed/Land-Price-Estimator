@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import (
+from Apps.core.models import (
     Governorate, Town, Area, Neighborhood,
     LandUseType, FacilityType, EnvironmentalFactorType,
     Project, 

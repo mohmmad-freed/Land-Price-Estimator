@@ -11,8 +11,8 @@ from django.utils import timezone
 from django.db import models
 from django.db.models import Count, Avg, Q
 from django.core.paginator import Paginator
-from Normal_User_Side.forms import UserForm
-from core.models import MLModel, Setting, Valuation, Project
+from Apps.Normal_User_Side.forms import UserForm
+from Apps.core.models import MLModel, Setting, Valuation, Project
 from .forms import MLModelUploadForm, ModelTestForm
 from datetime import timedelta
 from django.utils import timezone

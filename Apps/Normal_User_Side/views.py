@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import JsonResponse
 from .ml.predict import predict_land_price
-from core.models import Project, ProjectRoad, Valuation, Setting, Town, Area, Neighborhood
+from Apps.core.models import Project, ProjectRoad, Valuation, Setting, Town, Area, Neighborhood
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, ProjectForm, ProjectRoadFormSet
 from django.db.models import F
