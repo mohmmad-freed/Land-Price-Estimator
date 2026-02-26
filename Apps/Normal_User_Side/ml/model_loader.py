@@ -5,6 +5,7 @@ from django.conf import settings
 # Fallback path for original hardcoded model
 FALLBACK_MODEL_PATH = os.path.join(
     settings.BASE_DIR,
+    "Apps",
     "Normal_User_Side",
     "ml",
     "land_price_model.pkl"
@@ -47,5 +48,11 @@ def get_model():
         if os.path.exists(FALLBACK_MODEL_PATH):
             _model = joblib.load(FALLBACK_MODEL_PATH)
             _model_path = FALLBACK_MODEL_PATH
-    
+        else:
+            raise FileNotFoundError(
+                f"No ML model available. "
+                f"No active model is set in the database, and the fallback model "
+                f"was not found at: {FALLBACK_MODEL_PATH}"
+            )
+
     return _model
