@@ -1,8 +1,7 @@
 # Land Price Estimator
 
 Machine learning–powered land valuation system that assists land appraisers in estimating parcel prices using real-world data.
-![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)
-(https://colab.research.google.com/github/m-q000/Land-Price-Estimator/blob/main/notebooks/land_price_prediction.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/m-q000/Land-Price-Estimator/blob/main/notebooks/land_price_prediction.ipynb)
 
 ## Problem
 
