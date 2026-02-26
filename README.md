@@ -33,32 +33,51 @@ The platform enables appraisers to submit parcel details and receive instant pri
 ### ⚙️ Admin
 - Manage system configuration and users
 
-- ## Interface Preview
+## Interface Preview
 
 ### Landing & Login
-![Landing](docs/images/landing_page.png)
+<p align="center">
+  <img src="docs/images/landing_page.png" width="800">
+</p>
 
 ### Appraiser Dashboard
-![Dashboard](docs/images/appraiser_dashboard.png)
+<p align="center">
+  <img src="docs/images/appraiser_dashboard.png" width="800">
+</p>
 
 ### New Valuation Form
-![Form](docs/images/new_project1.png)
-![Form](docs/images/new_project2.png)
+<p align="center">
+  <img src="docs/images/new_project1.png" width="800">
+  <br><br>
+  <img src="docs/images/new_project2.png" width="800">
+</p>
 
 ### Prediction Results
-![Result](docs/images/prediction_result.png)
+<p align="center">
+  <img src="docs/images/prediction_result.png" width="800">
+</p>
 
 ### Data Scientist Dashboard
-![Scientist](docs/images/scientist_dashboard.png)
+<p align="center">
+  <img src="docs/images/scientist_dashboard.png" width="800">
+</p>
 
 ### Model Testing Interface
-![Testing](docs/images/scientist_model_testing1.png)
+<p align="center">
+  <img src="docs/images/scientist_model_testing1.png" width="800">
+</p>
 
 ### Model Testing Results
-![Testing](docs/images/scientist_model_testing2.png)
+<p align="center">
+  <img src="docs/images/scientist_model_testing2.png" width="800">
+</p>
 
 ### Model Performance Statistics
-![Statistics](docs/images/scientist_statistics.png)
+<p align="center">
+  <img src="docs/images/scientist_statistics.png" width="800">
+</p>
+
+---
 
 
 ## Machine Learning Pipeline
