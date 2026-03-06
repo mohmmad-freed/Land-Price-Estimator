@@ -129,6 +129,8 @@ env\Scripts\activate      # Windows
 pip install -r requirements.txt
 
 ### 5. Run migrations
+python manage.py makemigrations
+
 python manage.py migrate
 
 ### 6. Start server
